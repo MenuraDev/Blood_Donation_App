@@ -21,11 +21,14 @@ public class Event {
     @Column(name = "event_name", nullable = false)
     private String eventName;
 
-    @Column(name = "date")
-    private LocalDate date;
+    @Column(name = "event_date")
+    private LocalDate eventDate;
 
-    @Column(name = "duration")
-    private String duration; // Assuming duration is a string for simplicity (e.g., "2 hours", "full day")
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "location")
+    private String location;
 
     @ManyToOne
     @JoinColumn(name = "organizer_id")

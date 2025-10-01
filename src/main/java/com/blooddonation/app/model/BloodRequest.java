@@ -35,6 +35,10 @@ public class BloodRequest {
     private Hospital hospital;
 
     @ManyToOne
-    @JoinColumn(name = "manager_id")
+    @JoinColumn(name = "hospital_coordinator_id")
+    private HospitalCoordinator hospitalCoordinator;
+
+    @ManyToOne
+    @JoinColumn(name = "blood_donation_manager_id")
     private BloodDonationManager bloodDonationManager;
 }
