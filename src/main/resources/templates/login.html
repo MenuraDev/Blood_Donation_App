@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Blood Donation Management</h1>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/register">Sign Up</a></li>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="form-container">
+            <h2>Login</h2>
+            <div id="error-message" class="error-message"></div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="phone">Phone Number:</label>
+                    <input type="text" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn-primary">Login</button>
+                </div>
+            </form>
+            <div class="text-link">
+                Don't have an account? <a href="/register">Sign Up</a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Blood Donation App. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById('login-form').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const errorMessageDiv = document.getElementById('error-message');
+            errorMessageDiv.textContent = ''; // Clear previous errors
+
+            try {
+                const response = await fetch('/api/auth/signin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ phone, password })
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('Login successful:', data);
+                    // Store token and user info (e.g., in localStorage)
+                    localStorage.setItem('jwtToken', data.token);
+                    localStorage.setItem('userId', data.id);
+                    localStorage.setItem('userPhone', data.phone);
+                    localStorage.setItem('userEmail', data.email);
+                    localStorage.setItem('userRoles', JSON.stringify(data.roles));
+
+                    // Redirect to a dashboard or home page
+                    window.location.href = '/dashboard';
+                } else {
+                    const errorData = await response.json();
+                    errorMessageDiv.textContent = errorData.message || 'Login failed. Please check your credentials.';
+                    console.error('Login failed:', errorData);
+                }
+            } catch (error) {
+                errorMessageDiv.textContent = 'An unexpected error occurred. Please try again.';
+                console.error('Network error or unexpected issue:', error);
+            }
+        });
+    </script>
+</body>
+</html>

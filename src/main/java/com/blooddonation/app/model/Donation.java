@@ -18,18 +18,25 @@ public class Donation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long donationId;
 
-    @Column(name = "date")
-    private LocalDate date;
+    @Column(name = "donation_date")
+    private LocalDate donationDate;
 
-    @Column(name = "center_name")
-    private String centerName;
+    @Column(name = "blood_type")
+    private String bloodType;
 
-    @Column(name = "volume")
-    private Integer volume; // Assuming volume is an integer (e.g., in ml)
+    @Column(name = "quantity_ml")
+    private Integer quantityMl;
+
+    @Column(name = "status")
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "donor_id")
     private Donor donor;
+
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    private Event event;
 
     @ManyToOne
     @JoinColumn(name = "nurse_id")

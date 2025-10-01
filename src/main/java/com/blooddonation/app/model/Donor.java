@@ -5,18 +5,19 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.EqualsAndHashCode;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor; // Keep NoArgsConstructor if needed
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
 @DiscriminatorValue("DONOR")
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor // Keep NoArgsConstructor
 public class Donor extends User {
 
     @Column(name = "address")
@@ -30,4 +31,18 @@ public class Donor extends User {
 
     @OneToMany(mappedBy = "donor")
     private List<Donation> donations;
+
+    // Explicit constructor to handle the new 'role' field in User
+    public Donor(Long userId, String firstName, String lastName, LocalDate dob, Integer age, String nic, String phone, String email, String gender, String password, String address, String healthRecords, String bloodType, List<Donation> donations) {
+        super(userId, firstName, lastName, dob, age, nic, phone, email, gender, password);
+        this.address = address;
+        this.healthRecords = healthRecords;
+        this.bloodType = bloodType;
+        this.donations = donations;
+    }
+
+    @Override
+    public Role getRole() {
+        return Role.DONOR;
+    }
 }

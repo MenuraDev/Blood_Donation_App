@@ -21,17 +21,20 @@ public class BloodUnit {
     @Column(name = "blood_type", nullable = false)
     private String bloodType;
 
-    @Column(name = "expiry_date")
-    private LocalDate expiryDate;
+    @Column(name = "expire_date")
+    private LocalDate expireDate;
 
     @Column(name = "quantity")
-    private Integer quantity;
+    private Integer quantity; // Number of units
 
-    @ManyToOne
-    @JoinColumn(name = "hospital_id")
-    private Hospital hospital;
+    @Column(name = "volume_ml")
+    private Integer volumeMl; // Volume of the blood unit in ml
 
-    @ManyToOne
-    @JoinColumn(name = "manager_id")
-    private BloodDonationManager bloodDonationManager;
+    @OneToOne
+    @JoinColumn(name = "donation_id")
+    private Donation donation; // Link to the original donation
+
+    @OneToOne
+    @JoinColumn(name = "blood_request_id") // Changed name for clarity
+    private BloodRequest bloodRequest;
 }

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Blood Donation Management</h1>
+            <nav>
+                <ul>
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/register">Sign Up</a></li>
+                    <li><a href="/dashboard">Dashboard</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="dashboard-container">
+            <h2>Welcome to your Dashboard!</h2>
+            <div class="user-info">
+                <p><strong>User ID:</strong> <span id="userId"></span></p>
+                <p><strong>Phone:</strong> <span id="userPhone"></span></p>
+                <p><strong>Email:</strong> <span id="userEmail"></span></p>
+                <p><strong>Roles:</strong> <span id="userRoles"></span></p>
+            </div>
+            <div id="nav-links">
+                <a href="/user-management" id="userManagementLink" class="nav-link-button" style="display: none;">User Management</a>
+            </div>
+            <button id="logout-button" class="logout-button">Logout</button>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Blood Donation App. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userId = localStorage.getItem('userId');
+            const userPhone = localStorage.getItem('userPhone');
+            const userEmail = localStorage.getItem('userEmail');
+            const userRolesString = localStorage.getItem('userRoles');
+
+            if (!userId || !userPhone || !userEmail || !userRolesString) {
+                alert('You are not logged in. Please log in to access the dashboard.');
+                window.location.href = '/login.html';
+                return;
+            }
+
+            const userRoles = JSON.parse(userRolesString);
+
+            document.getElementById('userId').textContent = userId;
+            document.getElementById('userPhone').textContent = userPhone;
+            document.getElementById('userEmail').textContent = userEmail;
+            document.getElementById('userRoles').textContent = userRoles.join(', ');
+
+            // Show User Management link if user has IT_OFFICER or BLOOD_DONATION_MANAGER role
+            if (userRoles.includes('IT_OFFICER') || userRoles.includes('BLOOD_DONATION_MANAGER')) {
+                document.getElementById('userManagementLink').style.display = 'block';
+            }
+
+            document.getElementById('logout-button').addEventListener('click', function() {
+                localStorage.removeItem('jwtToken');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('userPhone');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userRoles');
+                alert('You have been logged out.');
+                window.location.href = '/login.html';
+            });
+        });
+    </script>
+</body>
+</html>
