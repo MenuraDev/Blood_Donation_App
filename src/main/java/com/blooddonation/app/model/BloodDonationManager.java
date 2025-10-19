@@ -17,7 +17,7 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor // Keep NoArgsConstructor
-public class BloodDonationManager extends User  {
+public class BloodDonationManager extends User{
     @OneToMany(mappedBy = "bloodDonationManager")
     private List<BloodRequest> approvedBloodRequests;
 

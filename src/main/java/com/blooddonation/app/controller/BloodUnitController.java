@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/blood-units")
-public class BloodUnitController  {
+public class BloodUnitController{
 
     @Autowired
     private BloodUnitService bloodUnitService;

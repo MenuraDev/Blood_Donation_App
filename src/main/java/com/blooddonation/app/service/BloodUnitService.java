@@ -28,7 +28,7 @@ public class BloodUnitService  {
         return bloodUnitRepository.save(bloodUnit);
     }
 
-    public List<BloodUnit> getAllBloodUnits()  {
+    public List<BloodUnit> getAllBloodUnits(){
         return bloodUnitRepository.findAll();
     }
 

@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BloodUnit  {
+public class BloodUnit{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
