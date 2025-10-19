@@ -18,7 +18,7 @@ public class BloodUnitController{
 
     @PreAuthorize("hasRole('BLOOD_DONATION_MANAGER')")
     @GetMapping
-    public ResponseEntity<List<BloodUnit>> getAllBloodUnits() {
+    public ResponseEntity<List<BloodUnit>> getAllBloodUnits(){
         List<BloodUnit> bloodUnits = bloodUnitService.getAllBloodUnits();
         return ResponseEntity.ok(bloodUnits);
     }

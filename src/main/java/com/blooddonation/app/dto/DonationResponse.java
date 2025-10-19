@@ -23,7 +23,7 @@ public class DonationResponse  {
     private EventDto event; // Nested DTO for Event
     private NurseDto nurse; // Nested DTO for Nurse
 
-    public DonationResponse(Donation donation){
+    public DonationResponse(Donation donation) {
         this.id = donation.getId();
         this.donationDate = donation.getDonationDate();
         this.bloodType = donation.getBloodType();
