@@ -31,9 +31,4 @@ public class Hospital {
     @OneToMany(mappedBy = "hospital")
     private List<HospitalCoordinator> hospitalCoordinators;
 
-    @OneToMany(mappedBy = "hospital")
-    private List<BloodRequest> bloodRequests;
-
-    @OneToMany(mappedBy = "hospital")
-    private List<BloodUnit> bloodUnits;
 }

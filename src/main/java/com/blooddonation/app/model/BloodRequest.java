@@ -30,11 +30,14 @@ public class BloodRequest {
     @Column(name = "req_date")
     private LocalDate reqDate;
 
-    @ManyToOne
-    @JoinColumn(name = "hospital_id")
-    private Hospital hospital;
+    @Column(name = "hospital_name")
+    private String hospitalName;
 
     @ManyToOne
-    @JoinColumn(name = "manager_id")
+    @JoinColumn(name = "hospital_coordinator_id")
+    private HospitalCoordinator hospitalCoordinator;
+
+    @ManyToOne
+    @JoinColumn(name = "blood_donation_manager_id")
     private BloodDonationManager bloodDonationManager;
 }
