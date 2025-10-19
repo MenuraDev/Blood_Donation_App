@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class BloodUnit {
+public class BloodUnit  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,7 +21,10 @@ public class BloodUnit {
     @Column(name = "blood_type", nullable = false)
     private String bloodType;
 
-    @Column(name = "expire_date")
+    @Column(name = "collected_date") // Removed nullable = false
+    private LocalDate collectedDate;
+
+    @Column(name = "expire_date") // Removed nullable = false
     private LocalDate expireDate;
 
     @Column(name = "quantity")

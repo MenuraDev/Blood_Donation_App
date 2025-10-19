@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/blood-units")
-public class BloodUnitController {
+public class BloodUnitController  {
 
     @Autowired
     private BloodUnitService bloodUnitService;
@@ -25,7 +25,7 @@ public class BloodUnitController {
 
     @PreAuthorize("hasRole('BLOOD_DONATION_MANAGER')")
     @GetMapping("/{id}")
-    public ResponseEntity<BloodUnit> getBloodUnitById(@PathVariable Long id) {
+    public ResponseEntity<BloodUnit> getBloodUnitById(@PathVariable Long id)  {
         return bloodUnitService.getBloodUnitById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());

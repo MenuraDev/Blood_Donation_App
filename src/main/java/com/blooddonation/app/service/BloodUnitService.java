@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BloodUnitService {
+public class BloodUnitService  {
 
     @Autowired
     private BloodUnitRepository bloodUnitRepository;
@@ -20,14 +20,15 @@ public class BloodUnitService {
     public BloodUnit createBloodUnitFromDonation(Donation donation) {
         BloodUnit bloodUnit = new BloodUnit();
         bloodUnit.setBloodType(donation.getBloodType());
+        bloodUnit.setCollectedDate(donation.getDonationDate());
         bloodUnit.setQuantity(1); // Assuming one donation creates one blood unit
         bloodUnit.setVolumeMl(donation.getQuantityMl()); // Store the volume from the donation
-        bloodUnit.setExpireDate(LocalDate.now().plusDays(42)); // Example: 42 days shelf life for red blood cells
+        bloodUnit.setExpireDate(donation.getDonationDate().plusDays(50)); // 50 days shelf life from collected date
         bloodUnit.setDonation(donation); // Link to the original donation
         return bloodUnitRepository.save(bloodUnit);
     }
 
-    public List<BloodUnit> getAllBloodUnits() {
+    public List<BloodUnit> getAllBloodUnits()  {
         return bloodUnitRepository.findAll();
     }
 
@@ -40,9 +41,17 @@ public class BloodUnitService {
                 .orElseThrow(() -> new ResourceNotFoundException("BloodUnit not found with id " + id));
 
         bloodUnit.setBloodType(bloodUnitDetails.getBloodType());
-        bloodUnit.setExpireDate(bloodUnitDetails.getExpireDate());
         bloodUnit.setQuantity(bloodUnitDetails.getQuantity());
         bloodUnit.setVolumeMl(bloodUnitDetails.getVolumeMl());
+
+        // Update collected date and recalculate expire date if collected date is provided
+        if (bloodUnitDetails.getCollectedDate() != null) {
+            bloodUnit.setCollectedDate(bloodUnitDetails.getCollectedDate());
+            bloodUnit.setExpireDate(bloodUnitDetails.getCollectedDate().plusDays(50));
+        } else {
+            // If collected date is not provided, ensure expire date is still calculated based on existing collected date
+            bloodUnit.setExpireDate(bloodUnit.getCollectedDate().plusDays(50));
+        }
         // Assuming donation and bloodRequest are not updated via this method directly
         return bloodUnitRepository.save(bloodUnit);
     }
