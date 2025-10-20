@@ -32,12 +32,32 @@ public abstract class User {
     @Column(name = "age")
     private Integer age;
 
+    @Column(name = "nic", unique = true)
+    private String nic;
+
     @Column(name = "phone")
     private String phone;
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
+    @Column(name = "gender")
+    private String gender;
+
     @Column(name = "password", nullable = false)
     private String password;
+
+    public enum Role {
+        IT_OFFICER,
+        BLOOD_DONATION_MANAGER,
+        HOSPITAL_COORDINATOR,
+        NURSE,
+        DONOR,
+        EVENT_ORGANIZER
+    }
+
+    // This method will be implemented by each concrete subclass to return its specific role.
+    public abstract Role getRole();
+
+    // The setter is removed as the role is immutable and defined by the entity's type.
 }
