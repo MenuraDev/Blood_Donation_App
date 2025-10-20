@@ -1,0 +1,803 @@
+<!-- donation-management.html -->
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Donation Management - Blood Donation System</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="logo-container">
+          <i class="fas fa-heartbeat"></i>
+          <h1>Blood Donation Management</h1>
+        </div>
+        <nav>
+          <ul>
+            <li>
+              <a href="/"><i class="fas fa-home"></i> Home</a>
+            </li>
+            <li>
+              <a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+            </li>
+            <li>
+              <a href="/register"><i class="fas fa-user-plus"></i> Sign Up</a>
+            </li>
+            <li>
+              <a href="/donor-signup"
+                ><i class="fas fa-tint"></i> Donor Sign Up</a
+              >
+            </li>
+            <li>
+              <a href="/dashboard"
+                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
+              >
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        <div class="page-header">
+          <h2>Donation Management</h2>
+          <button id="addDonationBtn" class="btn-primary">
+            <i class="fas fa-plus-circle"></i> Add New Donation
+          </button>
+        </div>
+
+        <!-- Donation List -->
+        <div class="table-container">
+          <h3>All Donations</h3>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Donor</th>
+                  <th>Date</th>
+                  <th>Quantity (ml)</th>
+                  <th>Blood Pressure</th>
+                  <th>Hemoglobin</th>
+                  <th>Status</th>
+                  <th>Nurse</th>
+                  <th class="actions-column">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="donationTableBody">
+                <!-- Donation rows will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 Blood Donation App. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <!-- Donation Form Modal -->
+    <div id="donationModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Add New Donation</h3>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <form id="donationForm">
+            <input type="hidden" id="donationId" name="id" />
+            <div class="form-group">
+              <label for="donorNameInput">Donor Name</label>
+              <input type="text" id="donorNameInput" list="donorSuggestions" required autocomplete="off" />
+              <datalist id="donorSuggestions"></datalist>
+              <input type="hidden" id="donorId" name="donorId" />
+              <small id="selectedDonorName" class="form-text text-muted"></small>
+            </div>
+            <div class="form-group">
+              <label for="eventNameInput">Event Name (Optional)</label>
+              <input type="text" id="eventNameInput" list="eventSuggestions" autocomplete="off" />
+              <datalist id="eventSuggestions"></datalist>
+              <input type="hidden" id="eventId" name="eventId" />
+              <small id="selectedEventName" class="form-text text-muted"></small>
+            </div>
+            <div class="form-group">
+              <label for="bloodType">Blood Type</label>
+              <input type="text" id="bloodType" name="bloodType" required />
+            </div>
+            <div class="form-group">
+              <label for="donationDate">Donation Date</label>
+              <input
+                type="date"
+                id="donationDate"
+                name="donationDate"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="quantityMl">Quantity (ml)</label>
+              <input
+                type="number"
+                id="quantityMl"
+                name="quantityMl"
+                required
+                min="1"
+              />
+            </div>
+            <div class="form-group">
+              <label for="bloodPressure">Blood Pressure</label>
+              <input type="text" id="bloodPressure" name="bloodPressure" />
+            </div>
+            <div class="form-group">
+              <label for="hemoglobinLevel">Hemoglobin Level</label>
+              <input
+                type="number"
+                id="hemoglobinLevel"
+                name="hemoglobinLevel"
+                step="0.1"
+              />
+            </div>
+            <input type="hidden" id="nurseId" name="nurseId" />
+            <div class="form-actions">
+              <button type="submit" class="btn-primary">Submit Donation</button>
+              <button type="button" class="btn-secondary" id="cancelEdit">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+      <div class="modal-content success-content">
+        <div class="modal-header">
+          <h3>Success</h3>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="notification success">
+            <i class="fas fa-check-circle"></i>
+            <p id="successMessage">Operation completed successfully!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+      <div class="modal-content error-content">
+        <div class="modal-header">
+          <h3>Error</h3>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="notification error">
+            <i class="fas fa-exclamation-circle"></i>
+            <p id="errorMessage">An error occurred!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+      const API_BASE_URL = "/api/donations";
+      const API_DONORS_SEARCH_URL = "/api/users/donors/search"; // New API endpoint for donor search
+      const API_EVENTS_SEARCH_URL = "/api/events/search"; // New API endpoint for event search
+      let currentUserRoles = [];
+      let currentUserId = null;
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const jwtToken = localStorage.getItem("jwtToken");
+        if (!jwtToken) {
+          window.location.href = "/login";
+          return;
+        }
+
+        const userRoles = localStorage.getItem("userRoles");
+        if (userRoles) {
+          currentUserRoles = JSON.parse(userRoles);
+        }
+        currentUserId = localStorage.getItem("userId");
+
+        loadDonations();
+        setupRoleBasedVisibility();
+
+        // Modal event listeners
+        document
+          .getElementById("addDonationBtn")
+          .addEventListener("click", function () {
+            openModal("donationModal");
+            resetForm();
+          });
+
+        document
+          .getElementById("donationForm")
+          .addEventListener("submit", async function (event) {
+            event.preventDefault();
+            const donationId = document.getElementById("donationId").value;
+            const formData = new FormData(this);
+            const donationData = {};
+
+            for (let [key, value] of formData.entries()) {
+              if (key === "hemoglobinLevel" && value) {
+                donationData[key] = parseFloat(value);
+              } else if (
+                ["donorId", "eventId", "nurseId", "quantityMl"].includes(key)
+              ) {
+                donationData[key] = value ? parseInt(value, 10) : null;
+              } else {
+                donationData[key] = value;
+              }
+            }
+
+            if (donationId) {
+              donationData.id = parseInt(donationId, 10);
+            } else {
+              delete donationData.id;
+            }
+
+            if (hasRole("ROLE_NURSE") && currentUserId) {
+              donationData.nurseId = parseInt(currentUserId, 10);
+            }
+
+            if (!donationId) {
+              donationData.status = "PENDING";
+            }
+
+            if (donationId) {
+              updateDonation(donationId, donationData);
+            } else {
+              createDonation(donationData);
+            }
+          });
+
+        document
+          .getElementById("cancelEdit")
+          .addEventListener("click", function () {
+            closeModal("donationModal");
+            resetForm();
+          });
+
+        // Close modals when clicking on X
+        document.querySelectorAll(".close").forEach((closeBtn) => {
+          closeBtn.addEventListener("click", function () {
+            const modalId = this.closest(".modal").id;
+            closeModal(modalId);
+          });
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener("click", function (event) {
+          if (event.target.classList.contains("modal")) {
+            closeModal(event.target.id);
+          }
+        });
+
+        // Donor search functionality
+        const donorNameInput = document.getElementById("donorNameInput");
+        const donorSuggestions = document.getElementById("donorSuggestions");
+        const donorIdHidden = document.getElementById("donorId");
+        const selectedDonorNameSpan = document.getElementById("selectedDonorName");
+
+        donorNameInput.addEventListener("input", async function () {
+          const query = this.value.trim();
+          if (query.length > 1) {
+            await fetchDonorSuggestions(query);
+          } else {
+            donorSuggestions.innerHTML = "";
+            donorIdHidden.value = "";
+            selectedDonorNameSpan.textContent = "";
+          }
+        });
+
+        donorNameInput.addEventListener("change", function () {
+          const selectedOption = Array.from(donorSuggestions.options).find(
+            (option) => option.value === this.value
+          );
+          if (selectedOption) {
+            donorIdHidden.value = selectedOption.dataset.id;
+            selectedDonorNameSpan.textContent = `Selected Donor: ${selectedOption.value}`;
+          } else {
+            donorIdHidden.value = "";
+            selectedDonorNameSpan.textContent = "";
+          }
+        });
+
+        async function fetchDonorSuggestions(query) {
+          try {
+            const response = await fetch(`${API_DONORS_SEARCH_URL}?firstName=${query}`, {
+              method: "GET",
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+              },
+            });
+
+            if (response.ok) {
+              const donors = await response.json();
+              donorSuggestions.innerHTML = ""; // Clear previous suggestions
+              donors.forEach((donor) => {
+                const option = document.createElement("option");
+                option.value = `${donor.firstName} ${donor.lastName}`;
+                option.dataset.id = donor.userId; // Store donor ID in a data attribute
+                donorSuggestions.appendChild(option);
+              });
+            } else {
+              console.error("Failed to fetch donor suggestions:", response.statusText);
+              donorSuggestions.innerHTML = "";
+            }
+          } catch (error) {
+            console.error("Error fetching donor suggestions:", error);
+            donorSuggestions.innerHTML = "";
+          }
+        }
+
+        // Event search functionality
+        const eventNameInput = document.getElementById("eventNameInput");
+        const eventSuggestions = document.getElementById("eventSuggestions");
+        const eventIdHidden = document.getElementById("eventId");
+        const selectedEventNameSpan = document.getElementById("selectedEventName");
+
+        eventNameInput.addEventListener("input", async function () {
+          const query = this.value.trim();
+          if (query.length > 1) {
+            await fetchEventSuggestions(query);
+          } else {
+            eventSuggestions.innerHTML = "";
+            eventIdHidden.value = "";
+            selectedEventNameSpan.textContent = "";
+          }
+        });
+
+        eventNameInput.addEventListener("change", function () {
+          const selectedOption = Array.from(eventSuggestions.options).find(
+            (option) => option.value === this.value
+          );
+          if (selectedOption) {
+            eventIdHidden.value = selectedOption.dataset.id;
+            selectedEventNameSpan.textContent = `Selected Event: ${selectedOption.value}`;
+          } else {
+            eventIdHidden.value = "";
+            selectedEventNameSpan.textContent = "";
+          }
+        });
+
+        async function fetchEventSuggestions(query) {
+          try {
+            const response = await fetch(`${API_EVENTS_SEARCH_URL}?eventName=${query}`, {
+              method: "GET",
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+              },
+            });
+
+            if (response.ok) {
+              const events = await response.json();
+              eventSuggestions.innerHTML = ""; // Clear previous suggestions
+              events.forEach((event) => {
+                const option = document.createElement("option");
+                option.value = event.eventName;
+                option.dataset.id = event.eventId; // Store event ID in a data attribute
+                eventSuggestions.appendChild(option);
+              });
+            } else {
+              console.error("Failed to fetch event suggestions:", response.statusText);
+              eventSuggestions.innerHTML = "";
+            }
+          } catch (error) {
+            console.error("Error fetching event suggestions:", error);
+            eventSuggestions.innerHTML = "";
+          }
+        }
+      });
+
+      function openModal(modalId) {
+        document.getElementById(modalId).style.display = "block";
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+        document.body.style.overflow = "auto";
+      }
+
+      function hasRole(roleName) {
+        return currentUserRoles.some(
+          (role) =>
+            (typeof role === "string" && role === roleName) ||
+            (typeof role === "object" && role.authority === roleName)
+        );
+      }
+
+      function setupRoleBasedVisibility() {
+        const addDonationBtn = document.getElementById("addDonationBtn");
+        if (hasRole("ROLE_NURSE") || hasRole("ROLE_BLOOD_DONATION_MANAGER")) {
+          addDonationBtn.style.display = "inline-flex";
+        } else {
+          addDonationBtn.style.display = "none";
+        }
+      }
+
+      async function loadDonations() {
+        try {
+          const response = await fetch(API_BASE_URL, {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+            },
+          });
+
+          if (response.ok) {
+            const donations = await response.json();
+            const tableBody = document.getElementById("donationTableBody");
+            tableBody.innerHTML = "";
+            donations.forEach((donation) => {
+              const row = tableBody.insertRow();
+              row.innerHTML = `
+                <td>${donation.id}</td>
+                <td>${
+                  donation.donor
+                    ? donation.donor.firstName + " " + donation.donor.lastName
+                    : "N/A"
+                }</td>
+                <td>${formatDate(donation.donationDate)}</td>
+                <td>${donation.quantityMl}</td>
+                <td>${donation.bloodPressure || "N/A"}</td>
+                <td>${donation.hemoglobinLevel || "N/A"}</td>
+                <td>${donation.status}</td>
+                <td>${
+                  donation.nurse
+                    ? donation.nurse.firstName + " " + donation.nurse.lastName
+                    : "N/A"
+                }</td>
+                <td class="actions-column">
+                  ${
+                    hasRole("ROLE_NURSE") ||
+                    hasRole("ROLE_BLOOD_DONATION_MANAGER")
+                      ? `
+                      <button class="btn-info edit-btn" data-id="${
+                        donation.id
+                      }" data-donation='${JSON.stringify(donation)}'>
+                        <i class="fas fa-edit"></i> Edit
+                      </button>
+                      <button class="btn-danger delete-btn" data-id="${
+                        donation.id
+                      }">
+                        <i class="fas fa-trash-alt"></i> Delete
+                      </button>
+                      ${
+                        donation.status === "PENDING"
+                          ? `
+                      <button class="btn-success approve-btn" data-id="${donation.id}">
+                        <i class="fas fa-check-circle"></i> Approve
+                      </button>
+                      <button class="btn-warning disapprove-btn" data-id="${donation.id}">
+                        <i class="fas fa-times-circle"></i> Disapprove
+                      </button>
+                      `
+                          : ""
+                      }
+                  `
+                      : ""
+                  }
+                </td>
+              `;
+            });
+            attachEventListeners();
+          } else {
+            const errorData = await response.json();
+            showErrorAlert(
+              "Failed to load donations: " +
+                (errorData.message || response.statusText)
+            );
+          }
+        } catch (error) {
+          showErrorAlert(
+            "An unexpected error occurred while loading donations."
+          );
+          console.error("Error loading donations:", error);
+        }
+      }
+
+      async function createDonation(donationData) {
+        try {
+          const response = await fetch(API_BASE_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+            },
+            body: JSON.stringify(donationData),
+          });
+
+          if (response.ok) {
+            closeModal("donationModal");
+            showSuccessAlert("Donation added successfully!");
+            resetForm();
+            loadDonations();
+          } else {
+            const errorData = await response.json();
+            showErrorAlert(
+              "Failed to add donation: " +
+                (errorData.message || response.statusText)
+            );
+          }
+        } catch (error) {
+          showErrorAlert("An unexpected error occurred while adding donation.");
+          console.error("Error adding donation:", error);
+        }
+      }
+
+      async function updateDonation(id, donationData) {
+        try {
+          const response = await fetch(`${API_BASE_URL}/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+            },
+            body: JSON.stringify(donationData),
+          });
+
+          if (response.ok) {
+            closeModal("donationModal");
+            showSuccessAlert("Donation updated successfully!");
+            resetForm();
+            loadDonations();
+          } else {
+            const errorData = await response.json();
+            showErrorAlert(
+              "Failed to update donation: " +
+                (errorData.message || response.statusText)
+            );
+          }
+        } catch (error) {
+          showErrorAlert(
+            "An unexpected error occurred while updating donation."
+          );
+          console.error("Error updating donation:", error);
+        }
+      }
+
+      async function deleteDonation(id) {
+        if (confirm("Are you sure you want to delete this donation?")) {
+          try {
+            const response = await fetch(`${API_BASE_URL}/${id}`, {
+              method: "DELETE",
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+              },
+            });
+
+            if (response.ok) {
+              showSuccessAlert("Donation deleted successfully!");
+              loadDonations();
+            } else {
+              const errorData = await response.json();
+              showErrorAlert(
+                "Failed to delete donation: " +
+                  (errorData.message || response.statusText)
+              );
+            }
+          } catch (error) {
+            showErrorAlert(
+              "An unexpected error occurred while deleting donation."
+            );
+            console.error("Error deleting donation:", error);
+          }
+        }
+      }
+
+      async function approveDonation(id) {
+        if (
+          confirm(
+            "Are you sure you want to approve this donation? This will create a blood unit."
+          )
+        ) {
+          try {
+            const response = await fetch(`${API_BASE_URL}/${id}/approve`, {
+              method: "PUT",
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+              },
+            });
+
+            if (response.ok) {
+              showSuccessAlert(
+                "Donation approved successfully! A blood unit has been created."
+              );
+              loadDonations();
+            } else {
+              const errorData = await response.json();
+              showErrorAlert(
+                "Failed to approve donation: " +
+                  (errorData.message || response.statusText)
+              );
+            }
+          } catch (error) {
+            showErrorAlert(
+              "An unexpected error occurred while approving donation."
+            );
+            console.error("Error approving donation:", error);
+          }
+        }
+      }
+
+      async function disapproveDonation(id) {
+        if (confirm("Are you sure you want to disapprove this donation?")) {
+          try {
+            const response = await fetch(`${API_BASE_URL}/${id}/disapprove`, {
+              method: "PUT",
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+              },
+            });
+
+            if (response.ok) {
+              showSuccessAlert("Donation disapproved successfully!");
+              loadDonations();
+            } else {
+              const errorData = await response.json();
+              showErrorAlert(
+                "Failed to disapprove donation: " +
+                  (errorData.message || response.statusText)
+              );
+            }
+          } catch (error) {
+            showErrorAlert(
+              "An unexpected error occurred while disapproving donation."
+            );
+            console.error("Error disapproving donation:", error);
+          }
+        }
+      }
+
+      function attachEventListeners() {
+        document.querySelectorAll(".edit-btn").forEach((button) => {
+          button.removeEventListener("click", handleEditClick);
+          button.addEventListener("click", handleEditClick);
+        });
+
+        document.querySelectorAll(".delete-btn").forEach((button) => {
+          button.removeEventListener("click", handleDeleteClick);
+          button.addEventListener("click", handleDeleteClick);
+        });
+
+        document.querySelectorAll(".approve-btn").forEach((button) => {
+          button.removeEventListener("click", handleApproveClick);
+          button.addEventListener("click", handleApproveClick);
+        });
+
+        document.querySelectorAll(".disapprove-btn").forEach((button) => {
+          button.removeEventListener("click", handleDisapproveClick);
+          button.addEventListener("click", handleDisapproveClick);
+        });
+      }
+
+      function handleEditClick(event) {
+        const donationData = JSON.parse(
+          event.target.closest(".edit-btn").dataset.donation
+        );
+        document.getElementById("donationId").value = donationData.id;
+        
+        // Populate new donor fields
+        const donorNameInput = document.getElementById("donorNameInput");
+        const donorIdHidden = document.getElementById("donorId");
+        const selectedDonorNameSpan = document.getElementById("selectedDonorName");
+
+        if (donationData.donor) {
+          donorNameInput.value = `${donationData.donor.firstName} ${donationData.donor.lastName}`;
+          donorIdHidden.value = donationData.donor.userId;
+          selectedDonorNameSpan.textContent = `Selected Donor: ${donorNameInput.value}`;
+        } else {
+          donorNameInput.value = "";
+          donorIdHidden.value = "";
+          selectedDonorNameSpan.textContent = "";
+        }
+
+        // Populate new event fields
+        const eventNameInput = document.getElementById("eventNameInput");
+        const eventIdHidden = document.getElementById("eventId");
+        const selectedEventNameSpan = document.getElementById("selectedEventName");
+
+        if (donationData.event) {
+          eventNameInput.value = donationData.event.eventName;
+          eventIdHidden.value = donationData.event.eventId;
+          selectedEventNameSpan.textContent = `Selected Event: ${donationData.event.eventName}`;
+        } else {
+          eventNameInput.value = "";
+          eventIdHidden.value = "";
+          selectedEventNameSpan.textContent = "";
+        }
+
+        document.getElementById("bloodType").value = donationData.bloodType;
+        document.getElementById("donationDate").value =
+          donationData.donationDate;
+        document.getElementById("quantityMl").value = donationData.quantityMl;
+        document.getElementById("bloodPressure").value =
+          donationData.bloodPressure;
+        document.getElementById("hemoglobinLevel").value =
+          donationData.hemoglobinLevel;
+
+        document.getElementById("modalTitle").textContent = "Edit Donation";
+        document.querySelector(
+          '#donationForm button[type="submit"]'
+        ).textContent = "Update Donation";
+        openModal("donationModal");
+      }
+
+      function handleDeleteClick(event) {
+        const id = event.target.closest(".delete-btn").dataset.id;
+        deleteDonation(id);
+      }
+
+      function handleApproveClick(event) {
+        const id = event.target.closest(".approve-btn").dataset.id;
+        approveDonation(id);
+      }
+
+      function handleDisapproveClick(event) {
+        const id = event.target.closest(".disapprove-btn").dataset.id;
+        disapproveDonation(id);
+      }
+
+      function resetForm() {
+        document.getElementById("donationForm").reset();
+        document.getElementById("donationId").value = "";
+        document.getElementById("modalTitle").textContent = "Add New Donation";
+        document.querySelector(
+          '#donationForm button[type="submit"]'
+        ).textContent = "Submit Donation";
+
+        // Clear new donor fields
+        document.getElementById("donorNameInput").value = "";
+        document.getElementById("donorId").value = "";
+        document.getElementById("selectedDonorName").textContent = "";
+        document.getElementById("donorSuggestions").innerHTML = "";
+
+        // Clear new event fields
+        document.getElementById("eventNameInput").value = "";
+        document.getElementById("eventId").value = "";
+        document.getElementById("selectedEventName").textContent = "";
+        document.getElementById("eventSuggestions").innerHTML = "";
+
+        if (hasRole("ROLE_NURSE") && currentUserId) {
+          document.getElementById("nurseId").value = currentUserId;
+        }
+      }
+
+      function showSuccessAlert(message) {
+        document.getElementById("successMessage").textContent = message;
+        openModal("successModal");
+        setTimeout(() => {
+          closeModal("successModal");
+        }, 3000);
+      }
+
+      function showErrorAlert(message) {
+        document.getElementById("errorMessage").textContent = message;
+        openModal("errorModal");
+        setTimeout(() => {
+          closeModal("errorModal");
+        }, 5000);
+      }
+
+      function formatDate(dateString) {
+        if (!dateString) return "N/A";
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+      }
+    </script>
+  </body>
+</html>

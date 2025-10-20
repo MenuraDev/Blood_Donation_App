@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard</title>
-    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
 </head>
 <body>
     <header>
+<<<<<<< Updated upstream
         <div class="container">
             <h1>Blood Donation Management</h1>
             <nav>
@@ -18,7 +23,23 @@
                     <li><a href="/dashboard">Dashboard</a></li>
                 </ul>
             </nav>
+=======
+      <div class="container">
+        <div class="logo-container">
+          <i class="fas fa-heartbeat"></i>
+          <h1>Blood Donation Management</h1>
+>>>>>>> Stashed changes
         </div>
+        <nav>
+          <ul>
+            <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            <li><a href="/register"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+            <li><a href="/donor-signup"><i class="fas fa-tint"></i> Donor Sign Up</a></li>
+            <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          </ul>
+        </nav>
+      </div>
     </header>
 
     <main>
@@ -30,9 +51,55 @@
                 <p><strong>Email:</strong> <span id="userEmail"></span></p>
                 <p><strong>Roles:</strong> <span id="userRoles"></span></p>
             </div>
+<<<<<<< Updated upstream
             <div id="nav-links">
                 <a href="/user-management" id="userManagementLink" class="nav-link-button" style="display: none;">User Management</a>
             </div>
+=======
+
+            <!-- Role-specific dashboards -->
+            <div id="donor-dashboard" class="role-dashboard" style="display: none;">
+                <h3>Donor Dashboard</h3>
+                <a href="#" class="btn-primary">View Profile</a>
+                <a href="/donations-history" class="btn-primary">View Donation History</a>
+                <a href="/blood-donation-events" class="btn-primary">Find Donation Events</a>
+            </div>
+
+            <div id="hospital-coordinator-dashboard" class="role-dashboard" style="display: none;">
+                <h3>Hospital Coordinator Dashboard</h3>
+                <a href="#" class="btn-primary">View Profile</a>
+                <a href="/blood-request-management" class="btn-primary">Manage Blood Requests</a>
+            </div>
+
+            <div id="blood-donation-manager-dashboard" class="role-dashboard" style="display: none;">
+                <h3>Blood Donation Manager Dashboard</h3>
+                <a href="#" class="btn-primary">View Profile</a>
+                <a href="/blood-request-management" class="btn-primary">Manage Blood Requests</a>
+                <a href="/blood-unit-management" class="btn-primary">Manage Blood Units</a>
+                <a href="/event-management" class="btn-primary">Manage Events</a>
+                <a href="/user-management" class="btn-primary">Manage Users</a>
+            </div>
+
+            <div id="nurse-dashboard" class="role-dashboard" style="display: none;">
+                <h3>Nurse Dashboard</h3>
+                <a href="#" class="btn-primary">View Profile</a>
+                <a href="/donation-management" class="btn-primary">Manage Donations</a>
+            </div>
+
+            <div id="it-officer-dashboard" class="role-dashboard" style="display: none;">
+                <h3>IT Officer Dashboard</h3>
+                <a href="#" class="btn-primary">View Profile</a>
+                <a href="/user-management" class="btn-primary">Manage Users</a>
+                <a href="/strategy-management" class="btn-primary">Manage Strategies</a>
+            </div>
+
+            <div id="event-organizer-dashboard" class="role-dashboard" style="display: none;">
+                <h3>Event Organizer Dashboard</h3>
+                <a href="#" class="btn-primary">View Profile</a>
+                <a href="/event-management" class="btn-primary">Manage Events</a>
+            </div>
+
+>>>>>>> Stashed changes
             <button id="logout-button" class="logout-button">Logout</button>
         </div>
     </main>
@@ -63,9 +130,29 @@
             document.getElementById('userEmail').textContent = userEmail;
             document.getElementById('userRoles').textContent = userRoles.join(', ');
 
+<<<<<<< Updated upstream
             // Show User Management link if user has IT_OFFICER or BLOOD_DONATION_MANAGER role
             if (userRoles.includes('IT_OFFICER') || userRoles.includes('BLOOD_DONATION_MANAGER')) {
                 document.getElementById('userManagementLink').style.display = 'block';
+=======
+            if (userRoles.includes('ROLE_DONOR')) {
+                document.getElementById('donor-dashboard').style.display = 'block';
+            }
+            if (userRoles.includes('ROLE_HOSPITAL_COORDINATOR')) {
+                document.getElementById('hospital-coordinator-dashboard').style.display = 'block';
+            }
+            if (userRoles.includes('ROLE_BLOOD_DONATION_MANAGER')) {
+                document.getElementById('blood-donation-manager-dashboard').style.display = 'block';
+            }
+            if (userRoles.includes('ROLE_NURSE')) {
+                document.getElementById('nurse-dashboard').style.display = 'block';
+            }
+            if (userRoles.includes('ROLE_IT_OFFICER')) {
+                document.getElementById('it-officer-dashboard').style.display = 'block';
+            }
+            if (userRoles.includes('ROLE_EVENT_ORGANIZER')) {
+                document.getElementById('event-organizer-dashboard').style.display = 'block';
+>>>>>>> Stashed changes
             }
 
             document.getElementById('logout-button').addEventListener('click', function() {
