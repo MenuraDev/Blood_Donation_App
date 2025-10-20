@@ -8,6 +8,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor; // Keep NoArgsConstructor if needed
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+// import jakarta.persistence.DiscriminatorValue;
+// import jakarta.persistence.Entity;
+// import jakarta.persistence.OneToMany;
+// import lombok.EqualsAndHashCode;
+// import lombok.Getter;
+// import lombok.Setter;
+// import lombok.NoArgsConstructor; // Keep NoArgsConstructor if needed
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,6 +28,7 @@ import java.util.List;
 @NoArgsConstructor // Keep NoArgsConstructor
 public class Nurse extends User {
     @OneToMany(mappedBy = "nurse")
+    @JsonManagedReference
     private List<Donation> supervisedDonations;
 
     // Explicit constructor to handle the new 'role' field in User
