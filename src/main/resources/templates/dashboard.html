@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+</head>
+<body>
+    <header>
+      <div class="container">
+        <div class="logo-container">
+          <i class="fas fa-heartbeat"></i>
+          <h1>Blood Donation Management</h1>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            <li><a href="/register"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+            <li><a href="/donor-signup"><i class="fas fa-tint"></i> Donor Sign Up</a></li>
+            <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+        <div class="dashboard-container">
+            <h2>Welcome to your Dashboard!</h2>
+            <div class="user-info">
+                <p><strong>User ID:</strong> <span id="userId"></span></p>
+                <p><strong>Phone:</strong> <span id="userPhone"></span></p>
+                <p><strong>Email:</strong> <span id="userEmail"></span></p>
+                <p><strong>Roles:</strong> <span id="userRoles"></span></p>
+            </div>
+
+            <!-- Role-specific dashboards -->
+            <div id="donor-dashboard" class="role-dashboard" style="display: none;">
+                <h3>Donor Dashboard</h3>
+                <a href="#" class="btn-primary">View Profile</a>
+                <a href="/donations-history" class="btn-primary">View Donation History</a>
+                <a href="/blood-donation-events" class="btn-primary">Find Donation Events</a>
+            </div>
+
+            <div id="hospital-coordinator-dashboard" class="role-dashboard" style="display: none;">
+                <h3>Hospital Coordinator Dashboard</h3>
+                <a href="#" class="btn-primary">View Profile</a>
+                <a href="/blood-request-management" class="btn-primary">Manage Blood Requests</a>
+            </div>
+
+            <div id="blood-donation-manager-dashboard" class="role-dashboard" style="display: none;">
+                <h3>Blood Donation Manager Dashboard</h3>
+                <a href="#" class="btn-primary">View Profile</a>
+                <a href="/blood-request-management" class="btn-primary">Manage Blood Requests</a>
+                <a href="/blood-unit-management" class="btn-primary">Manage Blood Units</a>
+                <a href="/event-management" class="btn-primary">Manage Events</a>
+                <a href="/user-management" class="btn-primary">Manage Users</a>
+            </div>
+
+            <div id="nurse-dashboard" class="role-dashboard" style="display: none;">
+                <h3>Nurse Dashboard</h3>
+                <a href="#" class="btn-primary">View Profile</a>
+                <a href="/donation-management" class="btn-primary">Manage Donations</a>
+            </div>
+
+            <div id="it-officer-dashboard" class="role-dashboard" style="display: none;">
+                <h3>IT Officer Dashboard</h3>
+                <a href="#" class="btn-primary">View Profile</a>
+                <a href="/user-management" class="btn-primary">Manage Users</a>
+                <a href="/strategy-management" class="btn-primary">Manage Strategies</a>
+            </div>
+
+            <div id="event-organizer-dashboard" class="role-dashboard" style="display: none;">
+                <h3>Event Organizer Dashboard</h3>
+                <a href="#" class="btn-primary">View Profile</a>
+                <a href="/event-management" class="btn-primary">Manage Events</a>
+            </div>
+
+            <button id="logout-button" class="logout-button">Logout</button>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Blood Donation App. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const userId = localStorage.getItem('userId');
+            const userPhone = localStorage.getItem('userPhone');
+            const userEmail = localStorage.getItem('userEmail');
+            const userRolesString = localStorage.getItem('userRoles');
+
+            if (!userId || !userPhone || !userEmail || !userRolesString) {
+                alert('You are not logged in. Please log in to access the dashboard.');
+                window.location.href = '/login';
+                return;
+            }
+
+            const userRoles = JSON.parse(userRolesString);
+
+            document.getElementById('userId').textContent = userId;
+            document.getElementById('userPhone').textContent = userPhone;
+            document.getElementById('userEmail').textContent = userEmail;
+            document.getElementById('userRoles').textContent = userRoles.join(', ');
+
+            if (userRoles.includes('ROLE_DONOR')) {
+                document.getElementById('donor-dashboard').style.display = 'block';
+            }
+            if (userRoles.includes('ROLE_HOSPITAL_COORDINATOR')) {
+                document.getElementById('hospital-coordinator-dashboard').style.display = 'block';
+            }
+            if (userRoles.includes('ROLE_BLOOD_DONATION_MANAGER')) {
+                document.getElementById('blood-donation-manager-dashboard').style.display = 'block';
+            }
+            if (userRoles.includes('ROLE_NURSE')) {
+                document.getElementById('nurse-dashboard').style.display = 'block';
+            }
+            if (userRoles.includes('ROLE_IT_OFFICER')) {
+                document.getElementById('it-officer-dashboard').style.display = 'block';
+            }
+            if (userRoles.includes('ROLE_EVENT_ORGANIZER')) {
+                document.getElementById('event-organizer-dashboard').style.display = 'block';
+            }
+
+            document.getElementById('logout-button').addEventListener('click', function() {
+                localStorage.removeItem('jwtToken');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('userPhone');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userRoles');
+                alert('You have been logged out.');
+                window.location.href = '/login';
+            });
+        });
+    </script>
+</body>
+</html>

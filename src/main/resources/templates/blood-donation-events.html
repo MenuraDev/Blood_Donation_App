@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blood Donation Events</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div class="logo-container">
+          <i class="fas fa-heartbeat"></i>
+          <h1>Blood Donation Management</h1>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            <li><a href="/register"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+            <li><a href="/donor-signup"><i class="fas fa-tint"></i> Donor Sign Up</a></li>
+            <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <div class="container">
+        <div class="page-header">
+            <h2>Upcoming Blood Donation Events</h2>
+            <button class="btn-info" id="showRegisteredEventsBtn">
+                Show My Registered Events
+            </button>
+        </div>
+
+        <!-- Event List -->
+        <div class="table-container">
+          <h3>All Events</h3>
+          <div class="table-responsive">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Location</th>
+                <th>Description</th>
+                <th>Organizer</th>
+                <th>Status/Action</th>
+              </tr>
+            </thead>
+            <tbody id="eventTableBody">
+              <!-- Event rows will be loaded here -->
+            </tbody>
+          </table>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Registered Events Modal -->
+    <div class="modal" id="registeredEventsModal">
+      <div class="modal-content" style="max-width: 800px;">
+        <div class="modal-header">
+          <h3 id="registeredEventsModalLabel">My Registered Events</h3>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Event ID</th>
+                  <th>Event Name</th>
+                  <th>Event Date</th>
+                  <th>Location</th>
+                  <th>Registration Date</th>
+                </tr>
+              </thead>
+              <tbody id="registeredEventsTableBody">
+                <!-- Registered event rows will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content notification-content">
+            <div class="modal-body">
+                <div class="notification success">
+                    <i class="fas fa-check-circle"></i>
+                    <p id="successMessage">Operation completed successfully!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content notification-content">
+            <div class="modal-body">
+                <div class="notification error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p id="errorMessage">An error occurred!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2025 Blood Donation App. All rights reserved.</p>
+      </div>
+    </footer>
+    
+    <script>
+      const API_BASE_URL = "/api/events";
+      const EVENT_REGISTER_API_BASE_URL = "/api/event-registers";
+      let currentUserRoles = [];
+      let currentUserId = null;
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const jwtToken = localStorage.getItem("jwtToken");
+        if (!jwtToken) {
+          window.location.href = "/login";
+          return;
+        }
+
+        currentUserRoles = JSON.parse(localStorage.getItem("userRoles") || "[]");
+        currentUserId = localStorage.getItem("userId");
+
+        if (hasRole("ROLE_DONOR") || hasRole("ROLE_BLOOD_DONATION_MANAGER") || hasRole("ROLE_EVENT_ORGANIZER")) {
+            loadEvents();
+            if (hasRole("ROLE_DONOR")) {
+                document.getElementById("showRegisteredEventsBtn").addEventListener("click", showRegisteredEvents);
+            } else {
+                document.getElementById("showRegisteredEventsBtn").style.display = "none";
+            }
+        } else {
+            showErrorAlert("You do not have permission to view this page.");
+            document.getElementById("showRegisteredEventsBtn").style.display = "none";
+        }
+        
+        document.querySelector('#registeredEventsModal .close').addEventListener('click', () => closeModal('registeredEventsModal'));
+        window.addEventListener('click', (event) => {
+            if(event.target.classList.contains('modal')) closeModal(event.target.id);
+        });
+      });
+      
+      function openModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }
+      function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+      function showSuccessAlert(message) {
+          document.getElementById('successMessage').textContent = message;
+          openModal('successModal');
+          setTimeout(() => closeModal('successModal'), 3000);
+      }
+      function showErrorAlert(message) {
+          document.getElementById('errorMessage').textContent = message;
+          openModal('errorModal');
+          setTimeout(() => closeModal('errorModal'), 5000);
+      }
+
+      function hasRole(roleName) {
+        return currentUserRoles.some(role => role === roleName);
+      }
+      
+      async function fetchWithAuth(url, options = {}) {
+            const jwtToken = localStorage.getItem('jwtToken');
+            const headers = {
+                'Authorization': `Bearer ${jwtToken}`,
+                'Content-Type': 'application/json',
+                ...options.headers,
+            };
+            const response = await fetch(url, { ...options, headers });
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: `HTTP error! Status: ${response.status}` }));
+                throw new Error(errorData.message);
+            }
+            if (response.status === 204 || response.headers.get('content-length') === '0') return null;
+            return response.json();
+      }
+
+      async function loadEvents() {
+        try {
+          const events = await fetchWithAuth(`${API_BASE_URL}/all`);
+          const tableBody = document.getElementById("eventTableBody");
+          tableBody.innerHTML = "";
+
+          let registeredEventIds = new Set();
+          if(hasRole('ROLE_DONOR')){
+              const registeredEventRegisters = await fetchWithAuth(`${EVENT_REGISTER_API_BASE_URL}/donor/${currentUserId}`);
+              registeredEventRegisters.forEach(reg => registeredEventIds.add(reg.event.eventId));
+          }
+
+          events.forEach((event) => {
+            const row = tableBody.insertRow();
+            const eventDate = new Date(event.eventDate);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); 
+
+            let actionHtml = '';
+            if (eventDate < today) {
+                actionHtml = '<span>Event Ended</span>';
+            } else if (hasRole("ROLE_DONOR") && registeredEventIds.has(event.eventId)) {
+                actionHtml = '<span>Registered</span>';
+            } else if (hasRole("ROLE_DONOR")) {
+                actionHtml = `<button class="btn-primary register-btn" data-event-id="${event.eventId}">Register</button>`;
+            } else {
+                actionHtml = `<button class="btn-primary" disabled>Register</button>`;
+            }
+
+            row.innerHTML = `
+                <td>${event.eventId}</td>
+                <td>${event.eventName}</td>
+                <td>${event.eventDate}</td>
+                <td>${event.location}</td>
+                <td>${event.description || "N/A"}</td>
+                <td>${event.eventOrganizer ? `${event.eventOrganizer.firstName} ${event.eventOrganizer.lastName}` : "N/A"}</td>
+                <td>${actionHtml}</td>
+            `;
+            if (hasRole("ROLE_DONOR") && eventDate >= today && !registeredEventIds.has(event.eventId)) {
+              row.querySelector(".register-btn").addEventListener("click", () => registerForEvent(event.eventId));
+            }
+          });
+        } catch (error) {
+          showErrorAlert("Failed to load events: " + error.message);
+        }
+      }
+
+      async function registerForEvent(eventId) {
+        if (!currentUserId) {
+          showErrorAlert("User ID not found. Please log in.");
+          return;
+        }
+        try {
+          await fetchWithAuth(
+            `${EVENT_REGISTER_API_BASE_URL}/register?eventId=${eventId}&donorId=${currentUserId}`,
+            { method: "POST" }
+          );
+          showSuccessAlert("You have successfully registered for the event!");
+          loadEvents(); // Reload events to update status
+        } catch (error) {
+          showErrorAlert("Failed to register for the event: " + error.message);
+        }
+      }
+
+      async function showRegisteredEvents() {
+        if (!currentUserId) {
+          showErrorAlert("User ID not found. Please log in.");
+          return;
+        }
+        try {
+          const registeredEventRegisters = await fetchWithAuth(`${EVENT_REGISTER_API_BASE_URL}/donor/${currentUserId}`);
+          const tableBody = document.getElementById("registeredEventsTableBody");
+          tableBody.innerHTML = "";
+
+          if (registeredEventRegisters.length === 0) {
+              tableBody.innerHTML = '<tr><td colspan="5">No events registered yet.</td></tr>';
+          } else {
+              registeredEventRegisters.forEach(reg => {
+                  const row = tableBody.insertRow();
+                  row.innerHTML = `
+                      <td>${reg.event.eventId}</td>
+                      <td>${reg.event.eventName}</td>
+                      <td>${reg.event.eventDate}</td>
+                      <td>${reg.event.location}</td>
+                      <td>${reg.registrationDate}</td>
+                  `;
+              });
+          }
+          openModal('registeredEventsModal');
+        } catch (error) {
+          showErrorAlert("Failed to load registered events: " + error.message);
+        }
+      }
+    </script>
+  </body>
+</html>

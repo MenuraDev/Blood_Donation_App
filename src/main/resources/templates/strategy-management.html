@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategy Management</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <style>
+        .strategy-section {
+            background-color: var(--white-color);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        .strategy-section h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+      <div class="container">
+        <div class="logo-container">
+          <i class="fas fa-heartbeat"></i>
+          <h1>Blood Donation Management</h1>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+            <li><a href="/register"><i class="fas fa-user-plus"></i> Sign Up</a></li>
+            <li><a href="/donor-signup"><i class="fas fa-tint"></i> Donor Sign Up</a></li>
+            <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <div class="page-header">
+                <h2>Strategy Management</h2>
+            </div>
+            
+            <div class="strategy-section">
+                <h3>Donation Eligibility Strategy</h3>
+                <div class="form-group"><label for="donationEligibilitySelect">Select Active Strategy:</label><select id="donationEligibilitySelect" name="donationEligibilitySelect"></select></div>
+                <button class="btn-primary" onclick="updateStrategy('DONATION_ELIGIBILITY')">Update Donation Strategy</button>
+                <p><strong>Current Active:</strong> <span id="currentDonationStrategy">Loading...</span></p>
+            </div>
+
+            <div class="strategy-section">
+                <h3>Event Validation Strategy</h3>
+                <div class="form-group"><label for="eventValidationSelect">Select Active Strategy:</label><select id="eventValidationSelect" name="eventValidationSelect"></select></div>
+                <button class="btn-primary" onclick="updateStrategy('EVENT_VALIDATION')">Update Event Strategy</button>
+                <p><strong>Current Active:</strong> <span id="currentEventStrategy">Loading...</span></p>
+            </div>
+
+            <div class="strategy-section">
+                <h3>Blood Request Validation Strategy</h3>
+                <div class="form-group"><label for="bloodRequestValidationSelect">Select Active Strategy:</label><select id="bloodRequestValidationSelect" name="bloodRequestValidationSelect"></select></div>
+                <button class="btn-primary" onclick="updateStrategy('BLOOD_REQUEST_VALIDATION')">Update Blood Request Strategy</button>
+                <p><strong>Current Active:</strong> <span id="currentBloodRequestStrategy">Loading...</span></p>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content notification-content">
+            <div class="modal-body">
+                <div class="notification success">
+                    <i class="fas fa-check-circle"></i>
+                    <p id="successMessage">Operation completed successfully!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content notification-content">
+            <div class="modal-body">
+                <div class="notification error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p id="errorMessage">An error occurred!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Blood Donation App. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const API_BASE_URL = "/api/strategies";
+        let jwtToken = localStorage.getItem("jwtToken");
+
+        document.addEventListener("DOMContentLoaded", function() {
+            if (!jwtToken) {
+                window.location.href = "/login";
+                return;
+            }
+            loadStrategies();
+            window.addEventListener('click', (event) => {
+                if(event.target.classList.contains('modal')) closeModal(event.target.id);
+            });
+        });
+
+        function openModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+        function showSuccessAlert(message) {
+            document.getElementById('successMessage').textContent = message;
+            openModal('successModal');
+            setTimeout(() => closeModal('successModal'), 3000);
+        }
+        function showErrorAlert(message) {
+            document.getElementById('errorMessage').textContent = message;
+            openModal('errorModal');
+            setTimeout(() => closeModal('errorModal'), 5000);
+        }
+
+        async function fetchWithAuth(url, options = {}) {
+            const headers = { 'Authorization': `Bearer ${jwtToken}`, 'Content-Type': 'application/json', ...options.headers };
+            const response = await fetch(url, { ...options, headers });
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: `HTTP error! Status: ${response.status}` }));
+                throw new Error(errorData.message);
+            }
+            return response.json();
+        }
+
+        async function loadStrategies() {
+            try {
+                const configs = await fetchWithAuth(`${API_BASE_URL}/config`);
+                const donationConfig = configs.find(c => c.strategyType === 'DONATION_ELIGIBILITY');
+                const eventConfig = configs.find(c => c.strategyType === 'EVENT_VALIDATION');
+                const bloodRequestConfig = configs.find(c => c.strategyType === 'BLOOD_REQUEST_VALIDATION');
+
+                document.getElementById('currentDonationStrategy').textContent = donationConfig ? formatStrategyName(donationConfig.activeStrategyName) : 'N/A';
+                document.getElementById('currentEventStrategy').textContent = eventConfig ? formatStrategyName(eventConfig.activeStrategyName) : 'N/A';
+                document.getElementById('currentBloodRequestStrategy').textContent = bloodRequestConfig ? formatStrategyName(bloodRequestConfig.activeStrategyName) : 'N/A';
+
+                await populateStrategyDropdown('DONATION_ELIGIBILITY', 'donationEligibilitySelect', donationConfig?.activeStrategyName);
+                await populateStrategyDropdown('EVENT_VALIDATION', 'eventValidationSelect', eventConfig?.activeStrategyName);
+                await populateStrategyDropdown('BLOOD_REQUEST_VALIDATION', 'bloodRequestValidationSelect', bloodRequestConfig?.activeStrategyName);
+
+            } catch (error) {
+                showErrorAlert(error.message || 'An error occurred while loading strategies.');
+            }
+        }
+
+        async function populateStrategyDropdown(strategyType, selectElementId, activeStrategyName) {
+            try {
+                const availableStrategies = await fetchWithAuth(`${API_BASE_URL}/available/${strategyType}`);
+                const selectElement = document.getElementById(selectElementId);
+                selectElement.innerHTML = ''; 
+
+                availableStrategies.forEach(strategyName => {
+                    const option = document.createElement('option');
+                    option.value = strategyName;
+                    option.textContent = formatStrategyName(strategyName);
+                    selectElement.appendChild(option);
+                });
+
+                if (activeStrategyName) {
+                    selectElement.value = activeStrategyName;
+                }
+            } catch (error) {
+                showErrorAlert(`Error populating dropdown for ${strategyType}: ${error.message}`);
+            }
+        }
+
+        async function updateStrategy(strategyType) {
+            const selectElementId = `${strategyType.charAt(0).toLowerCase() + strategyType.slice(1).replace(/_([a-z])/g, g => g[1].toUpperCase())}Select`;
+            const selectedStrategyName = document.getElementById(selectElementId).value;
+
+            if (!selectedStrategyName) {
+                showErrorAlert('Please select a strategy.');
+                return;
+            }
+            try {
+                await fetchWithAuth(`${API_BASE_URL}/config/${strategyType}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ activeStrategyName: selectedStrategyName })
+                });
+                showSuccessAlert(`${formatStrategyType(strategyType)} strategy updated successfully!`);
+                loadStrategies();
+            } catch (error) {
+                showErrorAlert(`Failed to update strategy: ${error.message}`);
+            }
+        }
+
+        function formatStrategyName(name) {
+            return name.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+        }
+
+        function formatStrategyType(type) {
+            return type.toLowerCase().replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+    </script>
+</body>
+</html>
