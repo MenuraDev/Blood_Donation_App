@@ -116,26 +116,24 @@
         document.getElementById("age").value = age;
       });
 
-
       document.getElementById("signup-form").addEventListener("submit", async function (event) {
           event.preventDefault();
 
-          const password = document.getElementById("password").value.trim();
-          const passwordConfirm = document.getElementById("passwordConfirm").value.trim();
+          const password = document.getElementById("password").value;
+          const passwordConfirm = document.getElementById("passwordConfirm").value;
 
           if (password !== passwordConfirm) {
             showErrorAlert("Passwords do not match.");
             return;
           }
 
-
-      const formData = new FormData(this);
-      const signupRequest = {};
-      formData.forEach((value, key) => {
-        signupRequest[key] = value;
-      });
-      if(signupRequest.age) signupRequest.age = parseInt(signupRequest.age);
-
+          const formData = new FormData(this);
+          const signupRequest = {};
+          formData.forEach((value, key) => {
+              signupRequest[key] = value;
+          });
+          if(signupRequest.age) signupRequest.age = parseInt(signupRequest.age);
+          
           try {
             const response = await fetch("/api/auth/signup", {
               method: "POST",
