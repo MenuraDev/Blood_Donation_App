@@ -58,7 +58,7 @@ public class DonationResponse  {
 
     @Data
     @NoArgsConstructor
-    public static class EventDto {
+    public static class EventDto{
         private Long eventId;
         private String eventName;
 

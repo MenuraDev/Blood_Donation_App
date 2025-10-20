@@ -13,7 +13,7 @@ public class BloodTypeValidation implements BloodRequestValidationStrategy  {
 
     @Override
     public boolean isValid(BloodRequest bloodRequest) {
-        if (bloodRequest.getBloodType() == null || bloodRequest.getBloodType().isEmpty())  {
+        if (bloodRequest.getBloodType() == null || bloodRequest.getBloodType().isEmpty()) {
             reason = "Blood type not provided.";
             return false;
         }

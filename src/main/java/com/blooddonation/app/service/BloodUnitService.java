@@ -17,7 +17,7 @@ public class BloodUnitService  {
     @Autowired
     private BloodUnitRepository bloodUnitRepository;
 
-    public BloodUnit createBloodUnitFromDonation(Donation donation)  {
+    public BloodUnit createBloodUnitFromDonation(Donation donation) {
         BloodUnit bloodUnit = new BloodUnit();
         bloodUnit.setBloodType(donation.getBloodType());
         bloodUnit.setCollectedDate(donation.getDonationDate());
