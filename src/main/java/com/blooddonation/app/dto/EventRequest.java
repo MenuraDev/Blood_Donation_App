@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 package com.blooddonation.app.dto;
 
 import lombok.Data;
@@ -12,3 +13,20 @@ public class EventRequest {
     private String description;
     private Long eventOrganizerId;
 }
+=======
+package com.blooddonation.app.dto;
+
+import lombok.Data;
+
+import java.time.LocalDate;
+
+@Data
+public class EventRequest {
+    private String eventName;
+    private LocalDate eventDate;
+    private String location;
+    private String description;
+    private Long eventOrganizerId;
+    private Integer maxDonors;
+}
+>>>>>>> Stashed changes
