@@ -53,6 +53,4 @@ You need to have the following software installed on your machine:
 
 ## 📞 Contact
 
-MenuraDev - [https://github.com/MenuraDev](https://github.com/MenuraDev)
-
 Project Link: [https://github.com/MenuraDev/Blood_Donation_App](https://github.com/MenuraDev/Blood_Donation_App)
