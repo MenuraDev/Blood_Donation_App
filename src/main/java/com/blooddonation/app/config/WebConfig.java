@@ -2,6 +2,7 @@ package com.blooddonation.app.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.lang.NonNull;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -20,5 +21,26 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addViewController("/blood-unit-management").setViewName("blood-unit-management");
         registry.addViewController("/event-management").setViewName("event-management");
         registry.addViewController("/donation-management").setViewName("donation-management");
+        registry.addViewController("/blood-donation-events").setViewName("blood-donation-events");
+        registry.addViewController("/strategy-management").setViewName("strategy-management");
+        registry.addViewController("/donations-history").setViewName("donation-history");
+        registry.addViewController("/event-register-management").setViewName("event-register-management");
+    }
+
+    @Override
+    public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/css/**")
+                .addResourceLocations("classpath:/static/css/");
+        registry.addResourceHandler("/js/**")
+                .addResourceLocations("classpath:/static/js/");
+        registry.addResourceHandler("/images/**")
+                .addResourceLocations("classpath:/static/images/");
+        registry.addResourceHandler("/fonts/**")
+                .addResourceLocations("classpath:/static/fonts/");
+        registry.addResourceHandler("/vendor/**")
+                .addResourceLocations("classpath:/static/vendor/");
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("classpath:/static/")
+                .setCachePeriod(3600);
     }
 }

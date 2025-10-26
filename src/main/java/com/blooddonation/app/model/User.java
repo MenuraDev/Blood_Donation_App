@@ -42,13 +42,10 @@ public abstract class User {
     private String email;
 
     @Column(name = "gender")
-    private String gender; // Added gender field
+    private String gender;
 
     @Column(name = "password", nullable = false)
     private String password;
-
-    // Removed the 'role' field as it's redundant with DiscriminatorColumn
-    // The role will be derived from the user_type discriminator value.
 
     public enum Role {
         IT_OFFICER,
@@ -59,18 +56,8 @@ public abstract class User {
         EVENT_ORGANIZER
     }
 
-    // Method to get the role from the discriminator value (user_type)
-    public Role getRole() {
-        // This method should be overridden in subclasses to return their specific role
-        // For the abstract User class, we can return null or throw an exception
-        // or try to infer from the class name if no specific discriminator value is set.
-        // However, with @DiscriminatorColumn, JPA handles this.
-        // For now, we'll return null, and subclasses will provide the actual role.
-        return null;
-    }
+    // This method will be implemented by each concrete subclass to return its specific role.
+    public abstract Role getRole();
 
-    // Setter for role is removed as it's derived
-    public void setRole(Role role) {
-        // No-op or throw UnsupportedOperationException
-    }
+    // The setter is removed as the role is immutable and defined by the entity's type.
 }

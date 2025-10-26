@@ -35,8 +35,7 @@ public class UserRequest {
 
     private String gender;
 
-    @NotBlank
-    @Size(min = 6, max = 40)
+    @Size(min = 6, max = 40) // Password can be null or empty for updates
     private String password;
 
     private Role role;

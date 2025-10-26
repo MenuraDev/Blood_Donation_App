@@ -10,6 +10,6 @@ public class BloodRequestRequest {
     private String reqStatus;
     private Integer quantity;
     private LocalDate reqDate;
-    private Long hospitalId;
+    private String hospitalName;
     private Long hospitalCoordinatorId;
 }

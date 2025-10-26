@@ -1,70 +1,130 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head>
+   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>User Management</title>
+    <title>Life Link - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Koulen&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   </head>
   <body>
     <header>
       <div class="container">
-        <div class="logo-container">
-          <i class="fas fa-heartbeat"></i>
-          <h1>Blood Donation Management</h1>
+        <div class="logo-container"> 
+          <lottie-player class="logo-lottie" th:src="@{/img/heartlogo.json}" src="/img/heartlogo.json" renderer="svg" autoplay loop speed="1" aria-hidden="true"></lottie-player>
+          <h1>Life Link</h1>
         </div>
-        <nav>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+        <label for="nav-toggle" class="nav-toggle-label">
+          <span></span>
+        </label>
+        <nav class="nav">
           <ul>
-            <li>
-              <a href="/"><i class="fas fa-home"></i> Home</a>
+            <li class="home-link">
+              <a href="/">Home</a>
             </li>
-            <li>
-              <a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a>
+            <li class="dashboard-link">
+              <a href="/dashboard">Dashboard</a>
             </li>
-            <li>
-              <a href="/register"><i class="fas fa-user-plus"></i> Sign Up</a>
+            <li class="become-donor-link">
+              <a href="/donor-signup">Become a Donor</a>
             </li>
-            <li>
-              <a href="/donor-signup"
-                ><i class="fas fa-tint"></i> Donor Sign Up</a
-              >
-            </li>
-            <li>
-              <a href="/dashboard"
-                ><i class="fas fa-tachometer-alt"></i> Dashboard</a
-              >
+            <li class="login-link">
+              <a href="/login">Login</a>
             </li>
           </ul>
         </nav>
       </div>
     </header>
 
-    <main>
-      <div class="container">
-        <div class="page-header">
-          <h2>User Management</h2>
+    <main class="dashboard-main">
+      <div class="dashboard-container">
+        <!-- Dashboard Header with Stats -->
+        <div class="dashboard-header">
+          <h2 class="dashboard-title">
+            <i class="fas fa-users"></i>
+            User Management
+          </h2>
+          <div class="dashboard-stats">
+            <div class="stat-card">
+              <div class="stat-icon total">
+                <i class="fas fa-users"></i>
+              </div>
+              <div class="stat-info">
+                <h4>Total Users</h4>
+                <p class="stat-value" id="totalUsers">0</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon active">
+                <i class="fas fa-user-check"></i>
+              </div>
+              <div class="stat-info">
+                <h4>Active Donors</h4>
+                <p class="stat-value" id="activeDonors">0</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon staff">
+                <i class="fas fa-user-tie"></i>
+              </div>
+              <div class="stat-info">
+                <h4>Staff Members</h4>
+                <p class="stat-value" id="staffMembers">0</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchUsers" placeholder="Search users...">
+          </div>
           <button id="addUserBtn" class="btn-primary" style="display: none">
             <i class="fas fa-plus-circle"></i> Add New User
           </button>
         </div>
 
-        <!-- User List -->
-        <div class="table-container">
-          <h3>All Users</h3>
+        <!-- Modern Table Container -->
+        <div class="modern-table-container">
           <div class="table-responsive">
-            <table class="table">
+            <table class="modern-table">
               <thead>
                 <tr>
-                  <th>ID</th>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Email</th>
-                  <th>Phone</th>
-                  <th>Role</th>
+                  <th><div class="th-content">
+                      <span>ID</span>
+                      <i class="fas fa-sort"></i>
+                    </div></th>
+                  <th><div class="th-content">
+                      <span>First Name</span>
+                      <i class="fas fa-sort"></i>
+                    </div></th>
+                  <th><div class="th-content">
+                      <span>Last Name</span>
+                      <i class="fas fa-sort"></i>
+                    </div></th>
+                  <th><div class="th-content">
+                      <span>Email</span>
+                      <i class="fas fa-sort"></i>
+                    </div></th>
+                  <th><div class="th-content">
+                      <span>Phone</span>
+                      <i class="fas fa-sort"></i>
+                    </div></th>
+                  <th><div class="th-content">
+                      <span>Role</span>
+                      <i class="fas fa-sort"></i>
+                    </div></th>
                   <th class="actions-header" style="display: none">Actions</th>
                 </tr>
               </thead>
@@ -141,9 +201,8 @@
               </select>
             </div>
             <div class="form-group">
-              <label for="password"
-                >Password (leave blank to keep current)</label
-              ><input
+              <label for="password" required>Password</label>
+                <input
                 type="password"
                 id="password"
                 name="password"
@@ -193,11 +252,13 @@
       </div>
     </div>
 
+    <!-- 
     <footer>
       <div class="container">
-        <p>&copy; 2025 Blood Donation App. All rights reserved.</p>
+        <p>&copy; 2025 Life Link. All rights reserved.</p>
       </div>
     </footer>
+    -->
 
     <script>
       const API_BASE_URL = "/api/users";
@@ -340,6 +401,19 @@
           const users = await fetchWithAuth(API_BASE_URL);
           const userTableBody = document.getElementById("userTableBody");
           userTableBody.innerHTML = "";
+
+          // Update dashboard stats
+          const totalUsers = users.length;
+          const activeDonors = users.filter(user => user.role === 'DONOR').length;
+          const staffMembers = users.filter(user => user.role !== 'DONOR').length;
+
+          document.getElementById("totalUsers").textContent = totalUsers;
+          document.getElementById("activeDonors").textContent = activeDonors;
+          document.getElementById("staffMembers").textContent = staffMembers;
+
+          // Add search functionality
+          setupSearchFunctionality();
+
           users.forEach((user) => {
             const row = userTableBody.insertRow();
             const userJsonString = JSON.stringify(user).replace(/'/g, "&apos;");
@@ -350,9 +424,15 @@
                         <td>${user.email}</td>
                         <td>${user.phone}</td>
                         <td>${user.role}</td>
-                        <td class="actions-column" style="display: none;">
-                            <button class="btn-info edit-btn" data-user='${userJsonString}'><i class="fas fa-edit"></i> Edit</button>
-                            <button class="btn-danger delete-btn" data-id="${user.userId}"><i class="fas fa-trash-alt"></i> Delete</button>
+                        <td class="actions-column" style="display: none;"><button class="btn-info edit-btn" data-id="${user.userId}" 
+                          data-user='${JSON.stringify(user)}'
+                          style="padding: 8px 16px; border-radius: 999px; border: none; background-color: #17a2b8; color: white; cursor: pointer; margin: 0 4px; display: inline-flex; align-items: center; gap: 8px;">
+                          <i class="fas fa-edit"></i> Edit
+                        </button>
+                      <button class="btn-danger delete-btn" data-id="${user.userId}"
+                          style="padding: 8px 16px; border-radius: 999px; border: none; background-color: #dc3545; color: white; cursor: pointer; margin: 0 4px; display: inline-flex; align-items: center; gap: 8px;">
+                          <i class="fas fa-trash-alt"></i> Delete
+                      </button>
                         </td>
                     `;
           });
@@ -446,6 +526,19 @@
       function handleDeleteClick(button) {
         const id = button.dataset.id;
         deleteUser(id);
+      }
+
+      function setupSearchFunctionality() {
+        const searchInput = document.getElementById("searchUsers");
+        searchInput.addEventListener("input", function() {
+          const searchTerm = this.value.toLowerCase();
+          const rows = document.querySelectorAll("#userTableBody tr");
+          
+          rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            row.style.display = text.includes(searchTerm) ? "" : "none";
+          });
+        });
       }
 
       function showSuccessAlert(message) {

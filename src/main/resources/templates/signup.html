@@ -1,29 +1,47 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-  <head>
+ <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign Up</title>
+    <title>Life Link - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Koulen&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   </head>
   <body>
+    <!-- Particles background -->
+    <div id="particles-js" aria-hidden="true"></div>
     <header>
       <div class="container">
-        <div class="logo-container">
-          <i class="fas fa-heartbeat"></i>
-          <h1>Blood Donation Management</h1>
+        <div class="logo-container"> 
+          <lottie-player class="logo-lottie" th:src="@{/img/heartlogo.json}" src="/img/heartlogo.json" renderer="svg" autoplay loop speed="1" aria-hidden="true"></lottie-player>
+          <h1>Life Link</h1>
         </div>
-        <nav>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+        <label for="nav-toggle" class="nav-toggle-label">
+          <span></span>
+        </label>
+        <nav class="nav">
           <ul>
-            <li><a href="/"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="/login"><i class="fas fa-sign-in-alt"></i> Login</a></li>
-            <li><a href="/register"><i class="fas fa-user-plus"></i> Sign Up</a></li>
-            <li><a href="/donor-signup"><i class="fas fa-tint"></i> Donor Sign Up</a></li>
-            <li><a href="/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li class="home-link">
+              <a href="/">Home</a>
+            </li>
+            <li class="dashboard-link">
+              <a href="/dashboard">Dashboard</a>
+            </li>
+            <li class="become-donor-link">
+              <a href="/donor-signup">Become a Donor</a>
+            </li>
+            <li class="login-link">
+              <a href="/login">Login</a>
+            </li>
           </ul>
         </nav>
       </div>
@@ -33,21 +51,42 @@
       <div class="form-container">
         <h2>Sign Up</h2>
         <form id="signup-form">
-          <div class="form-group"><label for="firstName">First Name:</label><input type="text" id="firstName" name="firstName" required /></div>
-          <div class="form-group"><label for="lastName">Last Name:</label><input type="text" id="lastName" name="lastName" required /></div>
-          <div class="form-group"><label for="dob">Date of Birth:</label><input type="date" id="dob" name="dob" required /></div>
-          <div class="form-group"><label for="age">Age:</label><input type="number" id="age" name="age" readonly /></div>
-          <div class="form-group"><label for="phone">Phone Number:</label><input type="text" id="phone" name="phone" required /></div>
-          <div class="form-group"><label for="email">Email:</label><input type="email" id="email" name="email" required /></div>
-          <div class="form-group">
-            <label for="gender">Gender:</label>
-            <select id="gender" name="gender" required>
-              <option value="">Select Gender</option>
-              <option value="MALE">Male</option>
-              <option value="FEMALE">Female</option>
-              <option value="OTHER">Other</option>
-            </select>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName">First Name:</label>
+              <input type="text" id="firstName" name="firstName" required>
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name:</label>
+              <input type="text" id="lastName" name="lastName" required>
+            </div>
           </div>
+          
+          <div class="form-group">
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="nic">NIC:</label>
+            <input type="text" id="nic" name="nic" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="phone">Phone Number:</label>
+            <input type="text" id="phone" name="phone" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+          </div>
+          
+          <div class="form-group">
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address">
+          </div>
+          
           <div class="form-group">
             <label for="role">Role:</label>
             <select id="role" name="role" required>
@@ -60,10 +99,56 @@
               <option value="EVENT_ORGANIZER">Event Organizer</option>
             </select>
           </div>
-          <div class="form-group"><label for="password">Password:</label><input type="password" id="password" name="password" required /></div>
-          <div class="form-group"><label for="passwordConfirm">Confirm Password:</label><input type="password" id="passwordConfirm" name="passwordConfirm" required /></div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="bloodType">Blood Type:</label>
+              <select id="bloodType" name="bloodType" required>
+                <option value="">Select Blood Type</option>
+                <option value="A_POS">A+</option>
+                <option value="A_NEG">A-</option>
+                <option value="B_POS">B+</option>
+                <option value="B_NEG">B-</option>
+                <option value="AB_POS">AB+</option>
+                <option value="AB_NEG">AB-</option>
+                <option value="O_POS">O+</option>
+                <option value="O_NEG">O-</option>
+              </select>
+            </div>
           <div class="form-group">
-            <button type="submit" class="btn-success" style="width: 100%;">Sign Up</button>
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" required>
+              <option value="">Select Gender</option>
+              <option value="MALE">Male</option>
+              <option value="FEMALE">Female</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="password">Password:</label>
+              <div class="input-with-icon">
+                <input type="password" id="password" name="password" required>
+                <button type="button" class="password-toggle" onclick="togglePassword('password')">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="passwordConfirm">Confirm Password:</label>
+              <div class="input-with-icon">
+                <input type="password" id="passwordConfirm" name="passwordConfirm" required>
+                <button type="button" class="password-toggle" onclick="togglePassword('passwordConfirm')">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <button type="submit" class="btn-success" style="width: 100%;">SIGN UP</button>
           </div>
         </form>
         <div class="text-link" style="text-align: center; margin-top: 20px;">
@@ -71,6 +156,18 @@
         </div>
       </div>
     </main>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content notification-content">
+            <div class="modal-body">
+                <div class="notification success">
+                    <i class="fas fa-check-circle"></i>
+                    <p id="successMessage">Operation completed successfully!</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Error Modal -->
     <div id="errorModal" class="modal">
@@ -86,26 +183,45 @@
 
     <footer>
       <div class="container">
-        <p>&copy; 2025 Blood Donation App. All rights reserved.</p>
+        <p>&copy; 2025 Life Link. All rights reserved.</p>
       </div>
     </footer>
 
     <script>
-      function openModal(modalId) {
-          document.getElementById(modalId).style.display = 'flex';
-      }
+        // Password visibility toggle function
+        function togglePassword(inputId) {
+            const input = document.getElementById(inputId);
+            const icon = input.parentElement.querySelector('.password-toggle i');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
 
-      function closeModal(modalId) {
+        window.openModal = function(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+        window.closeModal = function(modalId) {
           document.getElementById(modalId).style.display = 'none';
       }
-      
-      function showErrorAlert(message) {
+        window.showErrorAlert = function(message) {
           document.getElementById('errorMessage').textContent = message;
           openModal('errorModal');
           setTimeout(() => closeModal('errorModal'), 5000);
       }
+        window.showSuccessAlert = function(message) {
+            document.getElementById('successMessage').textContent = message;
+            openModal('successModal');
+            setTimeout(() => closeModal('successModal'), 3000);
+        }
 
-      document.getElementById("dob").addEventListener("change", function () {
+        document.getElementById('dob').addEventListener('change', function() {
         const dob = new Date(this.value);
         const today = new Date();
         let age = today.getFullYear() - dob.getFullYear();
@@ -113,17 +229,17 @@
         if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
           age--;
         }
-        document.getElementById("age").value = age;
+            // Note: Age field removed from form, but keeping this for potential future use
       });
 
-      document.getElementById("signup-form").addEventListener("submit", async function (event) {
+        document.getElementById('signup-form').addEventListener('submit', async function(event) {
           event.preventDefault();
 
-          const password = document.getElementById("password").value;
-          const passwordConfirm = document.getElementById("passwordConfirm").value;
+            const password = document.getElementById('password').value;
+            const passwordConfirm = document.getElementById('passwordConfirm').value;
 
           if (password !== passwordConfirm) {
-            showErrorAlert("Passwords do not match.");
+                showErrorAlert('Passwords do not match.');
             return;
           }
 
@@ -135,21 +251,38 @@
           if(signupRequest.age) signupRequest.age = parseInt(signupRequest.age);
           
           try {
-            const response = await fetch("/api/auth/signup", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(signupRequest),
+                const response = await fetch('/api/auth/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(signupRequest)
             });
 
             if (response.ok) {
-              alert("Registration successful! Please log in.");
-              window.location.href = "/login";
+                    let responseData = null;
+                    try {
+                        const contentType = response.headers.get("content-type");
+                        if (contentType && contentType.includes("application/json")) {
+                            responseData = await response.json();
+                        }
+                    } catch (e) {
+                        console.warn("Error parsing JSON response, but status was OK. Proceeding with generic success message.", e);
+                    }
+                    showSuccessAlert(responseData?.message || 'Registration successful! Please log in.');
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 2000);
             } else {
-              const errorData = await response.json();
-              showErrorAlert(errorData.message || "Signup failed. Please try again.");
+                    let errorData = {};
+                    try {
+                        errorData = await response.json();
+                    } catch (e) {
+                        console.error("Error parsing error response as JSON:", e);
+                    }
+                    showErrorAlert(errorData.message || 'Signup failed. Please try again.');
             }
           } catch (error) {
-            showErrorAlert("An unexpected error occurred. Please try again.");
+                console.error("An unexpected network or JavaScript error occurred:", error);
+                showErrorAlert('An unexpected error occurred. Please try again.');
           }
         });
         
@@ -157,6 +290,32 @@
             if (event.target.classList.contains('modal')) {
                 closeModal(event.target.id);
             }
+        });
+    </script>
+
+    <!-- tsparticles CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+    <script>
+      window.addEventListener('DOMContentLoaded', function () {
+        tsParticles.load('particles-js', {
+          fpsLimit: 60,
+          particles: {
+            number: { value: 40, density: { enable: true, area: 800 } },
+            color: { value: '#d93b2f' },
+            shape: { type: 'circle' },
+            opacity: { value: 0.6, random: { enable: true, minimumValue: 0.2 } },
+            size: { value: 3, random: { enable: true, minimumValue: 1 } },
+            links: { enable: true, distance: 120, color: '#ee5a49', opacity: 0.14, width: 1 },
+            move: { enable: true, speed: 0.8, direction: 'none', outModes: { default: 'out' } }
+          },
+          interactivity: {
+            detectsOn: 'canvas',
+            events: { onHover: { enable: true, mode: 'grab' }, onClick: { enable: false } },
+            modes: { grab: { distance: 140, links: { opacity: 0.25 } } }
+          },
+          detectRetina: true,
+          background: { color: 'transparent' }
+        });
         });
     </script>
   </body>

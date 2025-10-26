@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Life Link - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Koulen&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+    <style>
+        .modern-table-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            padding: 20px;
+            width: 100%;
+        }
+        
+        .strategy-section {
+            background-color: var(--white-color);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .strategy-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .strategy-section h3 {
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2em;
+        }
+
+        .strategy-section h3 i {
+            font-size: 1.2em;
+            color: #a1130e;
+        }
+
+        .strategy-section .form-group {
+            margin-bottom: 15px;
+        }
+
+        .strategy-section label {
+            display: block;
+            margin-bottom: 8px;
+            color: #34495e;
+            font-weight: 500;
+        }
+
+        .strategy-status {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #ececec;
+            border-radius: 4px;
+            border-left: 4px solid #db5534;
+            color: #181717;
+        }
+
+        .strategy-status strong {
+            color: #181717;
+            font-weight: 600;
+        }
+
+        .modern-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: white;
+            font-size: 1em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .modern-select:focus {
+            outline: none;
+            border-color: #a1130e;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.1);
+        }
+
+        .btn-primary {
+            background-color: #a1130e;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #a1130e;
+            transform: translateY(-1px);
+        }
+
+        .action-bar {
+            padding: 20px;
+            margin-bottom: 0;
+        }
+
+        .search-box {
+            max-width: 300px;
+        }
+
+        .search-box input {
+            color: #2c3e50;
+        }
+
+        @media (max-width: 1200px) {
+            .modern-table-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .modern-table-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+      <div class="container">
+        <div class="logo-container"> 
+          <lottie-player class="logo-lottie" th:src="@{/img/heartlogo.json}" src="/img/heartlogo.json" renderer="svg" autoplay loop speed="1" aria-hidden="true"></lottie-player>
+          <h1>Life Link</h1>
+        </div>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+        <label for="nav-toggle" class="nav-toggle-label">
+          <span></span>
+        </label>
+        <nav class="nav">
+          <ul>
+            <li class="home-link">
+              <a href="/">Home</a>
+            </li>
+            <li class="dashboard-link">
+              <a href="/dashboard">Dashboard</a>
+            </li>
+            <li class="become-donor-link">
+              <a href="/donor-signup">Become a Donor</a>
+            </li>
+            <li class="login-link">
+              <a href="/login">Login</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main class="dashboard-main">
+      <div class="dashboard-container">
+        <!-- Dashboard Header -->
+        <div class="dashboard-header">
+          <h2 class="dashboard-title">
+            <i class="fas fa-cogs"></i>
+            Strategy Management
+          </h2>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchStrategies" placeholder="Search strategies...">
+          </div>
+        </div>
+
+        <!-- Modern Strategy Sections -->
+        <div class="modern-table-container">
+            <div class="strategy-section">
+                <h3><i class="fas fa-heartbeat"></i> Donation Eligibility Strategy</h3>
+                <div class="form-group">
+                    <label for="donationEligibilitySelect">Select Active Strategy:</label>
+                    <select id="donationEligibilitySelect" name="donationEligibilitySelect" class="modern-select"></select>
+                </div>
+                <button class="btn-primary" onclick="updateStrategy('DONATION_ELIGIBILITY')">
+                    <i class="fas fa-sync-alt"></i> Update Donation Strategy
+                </button>
+                <p class="strategy-status"><strong>Current Active:</strong> <span id="currentDonationStrategy">Loading...</span></p>
+            </div>
+
+            <div class="strategy-section">
+                <h3><i class="fas fa-calendar-check"></i> Event Validation Strategy</h3>
+                <div class="form-group">
+                    <label for="eventValidationSelect">Select Active Strategy:</label>
+                    <select id="eventValidationSelect" name="eventValidationSelect" class="modern-select"></select>
+                </div>
+                <button class="btn-primary" onclick="updateStrategy('EVENT_VALIDATION')">
+                    <i class="fas fa-sync-alt"></i> Update Event Strategy
+                </button>
+                <p class="strategy-status"><strong>Current Active:</strong> <span id="currentEventStrategy">Loading...</span></p>
+            </div>
+
+            <div class="strategy-section">
+                <h3><i class="fas fa-clipboard-check"></i> Blood Request Validation Strategy</h3>
+                <div class="form-group">
+                    <label for="bloodRequestValidationSelect">Select Active Strategy:</label>
+                    <select id="bloodRequestValidationSelect" name="bloodRequestValidationSelect" class="modern-select"></select>
+                </div>
+                <button class="btn-primary" onclick="updateStrategy('BLOOD_REQUEST_VALIDATION')">
+                    <i class="fas fa-sync-alt"></i> Update Blood Request Strategy
+                </button>
+                <p class="strategy-status"><strong>Current Active:</strong> <span id="currentBloodRequestStrategy">Loading...</span></p>
+            </div>
+        </div>
+    </main>
+    
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content notification-content">
+            <div class="modal-body">
+                <div class="notification success">
+                    <i class="fas fa-check-circle"></i>
+                    <p id="successMessage">Operation completed successfully!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+        <div class="modal-content notification-content">
+            <div class="modal-body">
+                <div class="notification error">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <p id="errorMessage">An error occurred!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Blood Donation App. All rights reserved.</p>
+        </div>
+    </footer>
+
+    -->
+
+    <script>
+        const API_BASE_URL = "/api/strategies";
+        let jwtToken = localStorage.getItem("jwtToken");
+
+        document.addEventListener("DOMContentLoaded", function() {
+            if (!jwtToken) {
+                window.location.href = "/login";
+                return;
+            }
+            loadStrategies();
+            setupSearchFunctionality();
+            window.addEventListener('click', (event) => {
+                if(event.target.classList.contains('modal')) closeModal(event.target.id);
+            });
+        });
+
+        function openModal(modalId) { document.getElementById(modalId).style.display = 'flex'; }
+        function closeModal(modalId) { document.getElementById(modalId).style.display = 'none'; }
+        function showSuccessAlert(message) {
+            document.getElementById('successMessage').textContent = message;
+            openModal('successModal');
+            setTimeout(() => closeModal('successModal'), 3000);
+        }
+        function showErrorAlert(message) {
+            document.getElementById('errorMessage').textContent = message;
+            openModal('errorModal');
+            setTimeout(() => closeModal('errorModal'), 5000);
+        }
+
+        async function fetchWithAuth(url, options = {}) {
+            const headers = { 'Authorization': `Bearer ${jwtToken}`, 'Content-Type': 'application/json', ...options.headers };
+            const response = await fetch(url, { ...options, headers });
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => ({ message: `HTTP error! Status: ${response.status}` }));
+                throw new Error(errorData.message);
+            }
+            return response.json();
+        }
+
+        function setupSearchFunctionality() {
+            const searchInput = document.getElementById("searchStrategies");
+            searchInput.addEventListener("input", function() {
+                const searchTerm = this.value.toLowerCase();
+                const sections = document.querySelectorAll(".strategy-section");
+                
+                sections.forEach(section => {
+                    const text = section.textContent.toLowerCase();
+                    section.style.display = text.includes(searchTerm) ? "" : "none";
+                });
+            });
+        }
+
+        async function loadStrategies() {
+            try {
+                const configs = await fetchWithAuth(`${API_BASE_URL}/config`);
+                const donationConfig = configs.find(c => c.strategyType === 'DONATION_ELIGIBILITY');
+                const eventConfig = configs.find(c => c.strategyType === 'EVENT_VALIDATION');
+                const bloodRequestConfig = configs.find(c => c.strategyType === 'BLOOD_REQUEST_VALIDATION');
+
+                document.getElementById('currentDonationStrategy').textContent = donationConfig ? formatStrategyName(donationConfig.activeStrategyName) : 'N/A';
+                document.getElementById('currentEventStrategy').textContent = eventConfig ? formatStrategyName(eventConfig.activeStrategyName) : 'N/A';
+                document.getElementById('currentBloodRequestStrategy').textContent = bloodRequestConfig ? formatStrategyName(bloodRequestConfig.activeStrategyName) : 'N/A';
+
+                await populateStrategyDropdown('DONATION_ELIGIBILITY', 'donationEligibilitySelect', donationConfig?.activeStrategyName);
+                await populateStrategyDropdown('EVENT_VALIDATION', 'eventValidationSelect', eventConfig?.activeStrategyName);
+                await populateStrategyDropdown('BLOOD_REQUEST_VALIDATION', 'bloodRequestValidationSelect', bloodRequestConfig?.activeStrategyName);
+
+            } catch (error) {
+                showErrorAlert(error.message || 'An error occurred while loading strategies.');
+            }
+        }
+
+        async function populateStrategyDropdown(strategyType, selectElementId, activeStrategyName) {
+            try {
+                const availableStrategies = await fetchWithAuth(`${API_BASE_URL}/available/${strategyType}`);
+                const selectElement = document.getElementById(selectElementId);
+                selectElement.innerHTML = ''; 
+
+                availableStrategies.forEach(strategyName => {
+                    const option = document.createElement('option');
+                    option.value = strategyName;
+                    option.textContent = formatStrategyName(strategyName);
+                    selectElement.appendChild(option);
+                });
+
+                if (activeStrategyName) {
+                    selectElement.value = activeStrategyName;
+                }
+            } catch (error) {
+                showErrorAlert(`Error populating dropdown for ${strategyType}: ${error.message}`);
+            }
+        }
+
+        async function updateStrategy(strategyType) {
+            // Get the correct select element ID based on strategy type
+            let selectElementId;
+            switch(strategyType) {
+                case 'DONATION_ELIGIBILITY':
+                    selectElementId = 'donationEligibilitySelect';
+                    break;
+                case 'EVENT_VALIDATION':
+                    selectElementId = 'eventValidationSelect';
+                    break;
+                case 'BLOOD_REQUEST_VALIDATION':
+                    selectElementId = 'bloodRequestValidationSelect';
+                    break;
+                default:
+                    showErrorAlert('Invalid strategy type');
+                    return;
+            }
+
+            const selectedStrategyName = document.getElementById(selectElementId).value;
+
+            if (!selectedStrategyName) {
+                showErrorAlert('Please select a strategy.');
+                return;
+            }
+
+            try {
+                const response = await fetchWithAuth(`${API_BASE_URL}/config/${strategyType}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ activeStrategyName: selectedStrategyName })
+                });
+                
+                if (response) {
+                    showSuccessAlert(`${formatStrategyType(strategyType)} strategy updated successfully!`);
+                    await loadStrategies(); // Reload the strategies to update the display
+                }
+            } catch (error) {
+                console.error('Update strategy error:', error);
+                showErrorAlert(`Failed to update strategy: ${error.message}`);
+            }
+        }
+
+        function formatStrategyName(name) {
+            return name.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+        }
+
+        function formatStrategyType(type) {
+            return type.toLowerCase().replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+        }
+    </script>
+</body>
+</html>

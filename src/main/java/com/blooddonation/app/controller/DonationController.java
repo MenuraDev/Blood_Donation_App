@@ -1,6 +1,7 @@
 package com.blooddonation.app.controller;
 
 import com.blooddonation.app.dto.DonationRequest;
+import com.blooddonation.app.dto.DonationResponse; // Import DonationResponse
 import com.blooddonation.app.model.Donation;
 import com.blooddonation.app.service.DonationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors; // Import Collectors
 
 @RestController
 @RequestMapping("/api/donations")
@@ -18,53 +20,78 @@ public class DonationController {
     @Autowired
     private DonationService donationService;
 
-    @PreAuthorize("hasRole('NURSE')")
+    @PreAuthorize("hasRole('NURSE') or hasRole('BLOOD_DONATION_MANAGER')")
     @PostMapping
-    public ResponseEntity<Donation> createDonation(@RequestBody DonationRequest donationRequest) {
+    public ResponseEntity<DonationResponse> createDonation(@RequestBody DonationRequest donationRequest) {
         Donation createdDonation = donationService.createDonation(donationRequest);
-        return new ResponseEntity<>(createdDonation, HttpStatus.CREATED);
+        return new ResponseEntity<>(new DonationResponse(createdDonation), HttpStatus.CREATED);
     }
 
-    @PreAuthorize("hasRole('NURSE')")
+    @PreAuthorize("hasRole('NURSE') or hasRole('BLOOD_DONATION_MANAGER')")
     @PutMapping("/{id}/approve")
-    public ResponseEntity<Donation> approveDonation(@PathVariable Long id) {
+    public ResponseEntity<DonationResponse> approveDonation(@PathVariable Long id) {
         Donation approvedDonation = donationService.approveDonation(id);
-        return ResponseEntity.ok(approvedDonation);
+        return ResponseEntity.ok(new DonationResponse(approvedDonation));
     }
 
-    @PreAuthorize("hasRole('NURSE')")
+    @PreAuthorize("hasRole('NURSE') or hasRole('BLOOD_DONATION_MANAGER')")
+    @PutMapping("/{id}/disapprove")
+    public ResponseEntity<DonationResponse> disapproveDonation(@PathVariable Long id) {
+        Donation disapprovedDonation = donationService.disapproveDonation(id);
+        return ResponseEntity.ok(new DonationResponse(disapprovedDonation));
+    }
+
+    @PreAuthorize("hasRole('NURSE') or hasRole('BLOOD_DONATION_MANAGER')")
     @GetMapping
-    public ResponseEntity<List<Donation>> getAllDonations() {
+    public ResponseEntity<List<DonationResponse>> getAllDonations() {
         List<Donation> donations = donationService.getAllDonations();
-        return ResponseEntity.ok(donations);
+        List<DonationResponse> donationResponses = donations.stream()
+                .map(DonationResponse::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(donationResponses);
     }
 
-    @PreAuthorize("hasRole('NURSE')")
+    @PreAuthorize("hasRole('NURSE') or hasRole('BLOOD_DONATION_MANAGER')")
     @GetMapping("/{id}")
-    public ResponseEntity<Donation> getDonationById(@PathVariable Long id) {
+    public ResponseEntity<DonationResponse> getDonationById(@PathVariable Long id) {
         return donationService.getDonationById(id)
+                .map(DonationResponse::new)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PreAuthorize("hasRole('NURSE')")
+    @PreAuthorize("hasRole('NURSE') or hasRole('BLOOD_DONATION_MANAGER')")
     @PutMapping("/{id}")
-    public ResponseEntity<Donation> updateDonation(@PathVariable Long id, @RequestBody DonationRequest donationDetails) {
+    public ResponseEntity<DonationResponse> updateDonation(@PathVariable Long id,
+            @RequestBody DonationRequest donationDetails) {
         Donation updatedDonation = donationService.updateDonation(id, donationDetails);
-        return ResponseEntity.ok(updatedDonation);
+        return ResponseEntity.ok(new DonationResponse(updatedDonation));
     }
 
-    @PreAuthorize("hasRole('NURSE')")
+    @PreAuthorize("hasRole('NURSE') or hasRole('BLOOD_DONATION_MANAGER')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDonation(@PathVariable Long id) {
         donationService.deleteDonation(id);
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize("hasRole('NURSE')")
+    @PreAuthorize("hasRole('ROLE_NURSE') or hasRole('ROLE_BLOOD_DONATION_MANAGER')")
     @GetMapping("/nurse/{nurseId}")
-    public ResponseEntity<List<Donation>> getDonationsByNurseId(@PathVariable Long nurseId) {
+    public ResponseEntity<List<DonationResponse>> getDonationsByNurseId(@PathVariable Long nurseId) {
         List<Donation> donations = donationService.getDonationsByNurseId(nurseId);
-        return ResponseEntity.ok(donations);
+        List<DonationResponse> donationResponses = donations.stream()
+                .map(DonationResponse::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(donationResponses);
+    }
+
+    @PreAuthorize("hasRole('ROLE_DONOR')")
+    @GetMapping("/donor/{donorId}")
+    public ResponseEntity<List<DonationResponse>> getDonationsByDonorId(@PathVariable Long donorId) {
+        List<Donation> donations = donationService.getDonationsByDonorId(donorId);
+        List<DonationResponse> donationResponses = donations.stream()
+                .map(DonationResponse::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(donationResponses);
     }
 }

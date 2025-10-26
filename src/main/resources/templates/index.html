@@ -1,55 +1,138 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Blood Donation App - Home</title>
-    <link rel="stylesheet" href="../static/css/style.css">
-</head>
-<body>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Life Link - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Koulen&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  </head>
+  <body>
     <header>
-        <div class="container">
-            <h1>Blood Donation Management</h1>
-            <nav>
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/login">Login</a></li>
-                    <li><a href="/register">Sign Up</a></li>
-                    <li><a href="/dashboard">Dashboard</a></li>
-                </ul>
-            </nav>
+      <div class="container">
+        <div class="logo-container"> 
+          <lottie-player class="logo-lottie" th:src="@{/img/heartlogo.json}" src="/img/heartlogo.json" renderer="svg" autoplay loop speed="1" aria-hidden="true"></lottie-player>
+          <h1>Life Link</h1>
         </div>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+        <label for="nav-toggle" class="nav-toggle-label">
+          <span></span>
+        </label>
+        <nav class="nav">
+          <ul>
+            <li>
+              <a href="/">Home</a>
+            </li>
+            <li class>
+              <a href="/dashboard">Dashboard</a>
+            </li>
+            <li class="become-donor-link">
+              <a href="/donor-signup">Become a Donor</a>
+            </li>
+            <li class="login-link">
+              <a href="/login">Login</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </header>
 
     <main>
-        <section class="hero-section">
-            <div class="container">
-                <h1>Donate Blood, Save Lives</h1>
-                <p>Our platform connects donors, hospitals, and event organizers to streamline the blood donation process. All stakeholders, including Donors, Hospital Coordinators, Blood Donation Managers, Nurses, IT Officers, and Event Organizers, can log in using our unified portal.</p>
-                <a href="/login" class="btn-primary">Login Now</a>
+      <section class="hero-section">
+  <div class="hero-bg"></div>
+        <div class="container">
+          <div class="hero-content scroll-animate delay-1" role="region" aria-label="Hero">
+            <h1>Donate Blood <br>Save Lives</h1>
+            <p>
+              Every blood donation is a chance to save a life.<br> Be a part of a community of heroes. <br> Your contribution makes a real difference.
+            </p>
+            <div class="hero-actions">
+              <a href="/donor-signup" class="btn-cta" aria-label="Become a donor - sign up"> 
+                <i class="fas fa-heart" aria-hidden="true"></i>
+                <span>Become a Donor</span>
+              </a>
             </div>
-        </section>
+          </div>
+        </div>
+      </section>
 
-        <section class="features-section container">
-            <div class="feature-card">
-                <h3>Easy Registration</h3>
-                <p>Sign up quickly and become a part of our life-saving network.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Manage Donations</h3>
-                <p>Track your donation history and schedule future appointments.</p>
-            </div>
-            <div class="feature-card">
-                <h3>Blood Request System</h3>
-                <p>Hospitals can easily request and manage blood units.</p>
-            </div>
-        </section>
+      <section class="features-section container">
+  <div class="feature-card scroll-animate delay-1">
+          <i class="fas fa-user-plus feature-icon"></i>
+          <h3>Easy Registration</h3>
+          <p>Sign up quickly and become a part of our life-saving network.</p>
+        </div>
+  <div class="feature-card scroll-animate delay-2">
+          <i class="fas fa-hand-holding-medical feature-icon"></i>
+          <h3>Manage Donations</h3>
+          <p>Track your donation history and schedule future appointments.</p>
+        </div>
+  <div class="feature-card scroll-animate delay-3">
+          <i class="fas fa-hospital feature-icon"></i>
+          <h3>Blood Request System</h3>
+          <p>Hospitals can easily request and manage blood units.</p>
+        </div>
+      </section>
     </main>
 
     <footer>
-        <div class="container">
-            <p>&copy; 2025 Blood Donation App. All rights reserved.</p>
-        </div>
+      <div class="container">
+        <p>&copy; 2025 Life Link. All rights reserved.</p>
+      </div>
     </footer>
-</body>
+  </body>
+  <script>
+    // Lottie debug helper: verify the JSON endpoint and assign it to the player
+    (function(){
+      const path = '/img/heartlogo.json';
+      // Wait for DOM and lottie-player to be ready
+      function init(){
+        const player = document.querySelector('.logo-lottie');
+        if(!player){ console.warn('Lottie player element not found'); return; }
+
+        // Check JSON accessibility
+        fetch(path).then(resp=>{
+          if(!resp.ok) throw new Error('HTTP '+resp.status);
+          return resp.json();
+        }).then(json=>{
+          // assign src programmatically (helps if initial attribute wasn't processed)
+          try{
+            player.setAttribute('src', path);
+            console.log('Lottie JSON reachable and assigned to player');
+          }catch(e){
+            console.error('Failed to assign Lottie src:', e);
+          }
+        }).catch(err=>{
+          console.error('Unable to fetch Lottie JSON at', path, err);
+        });
+      }
+
+      if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+      else init();
+    })();
+  </script>
+    <script>
+      // Scroll reveal using IntersectionObserver
+      (function(){
+        const observer = new IntersectionObserver((entries)=>{
+          entries.forEach(entry=>{
+            if(entry.isIntersecting){
+              entry.target.classList.add('in-view');
+            }
+          });
+        },{ threshold: 0.50 });
+
+        document.querySelectorAll('.scroll-animate').forEach(el=>observer.observe(el));
+      })();
+    </script>
 </html>

@@ -10,7 +10,10 @@ import lombok.Setter;
 import lombok.NoArgsConstructor; // Keep NoArgsConstructor if needed
 
 import java.time.LocalDate;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @DiscriminatorValue("EVENT_ORGANIZER")
@@ -24,6 +27,8 @@ public class EventOrganizer extends User {
     private String organizationName;
 
     @OneToMany(mappedBy = "eventOrganizer")
+    @JsonManagedReference
+    @JsonIgnore // Ignore events to break potential circular reference
     private List<Event> events;
 
     // Explicit constructor to handle the new 'role' field in User

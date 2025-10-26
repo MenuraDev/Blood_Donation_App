@@ -4,6 +4,7 @@ import com.blooddonation.app.dto.JwtResponse;
 import com.blooddonation.app.dto.LoginRequest;
 import com.blooddonation.app.dto.SignupRequest;
 import com.blooddonation.app.dto.ErrorResponse;
+import com.blooddonation.app.dto.MessageResponse;
 import com.blooddonation.app.model.Donor;
 import com.blooddonation.app.model.User;
 import com.blooddonation.app.model.Nurse; // Explicitly import Nurse
@@ -49,7 +50,7 @@ public class AuthController {
         String jwt = jwtUtil.generateToken(userDetails); // Generate JWT token
 
         List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority().replace("ROLE_", "")) // Strip "ROLE_" prefix
+                .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
 
         User user = userService.findByPhone(userDetails.getUsername())
@@ -86,7 +87,7 @@ public class AuthController {
                 newUser = new Nurse(null, signupRequest.getFirstName(), signupRequest.getLastName(), signupRequest.getDob(), signupRequest.getAge(), signupRequest.getNic(), signupRequest.getPhone(), signupRequest.getEmail(), signupRequest.getGender(), signupRequest.getPassword(), null); // Pass null for supervisedDonations initially
                 break;
             case DONOR:
-                newUser = new Donor(null, signupRequest.getFirstName(), signupRequest.getLastName(), signupRequest.getDob(), signupRequest.getAge(), signupRequest.getNic(), signupRequest.getPhone(), signupRequest.getEmail(), signupRequest.getGender(), signupRequest.getPassword(), signupRequest.getAddress(), null, signupRequest.getBloodType(), null); // Pass null for healthRecords and donations initially
+                newUser = new Donor(null, signupRequest.getFirstName(), signupRequest.getLastName(), signupRequest.getDob(), signupRequest.getAge(), signupRequest.getNic(), signupRequest.getPhone(), signupRequest.getEmail(), signupRequest.getGender(), signupRequest.getPassword(), signupRequest.getAddress(), null, signupRequest.getBloodType(), null, null); // Pass null for healthRecords, donations, and eventRegisters initially
                 break;
             case EVENT_ORGANIZER:
                 newUser = new EventOrganizer(null, signupRequest.getFirstName(), signupRequest.getLastName(), signupRequest.getDob(), signupRequest.getAge(), signupRequest.getNic(), signupRequest.getPhone(), signupRequest.getEmail(), signupRequest.getGender(), signupRequest.getPassword(), signupRequest.getOrganizationName(), null); // Pass null for events initially
@@ -107,6 +108,6 @@ public class AuthController {
 
         userService.registerUser(newUser);
 
-        return ResponseEntity.ok("User registered successfully!");
+        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
     }
 }

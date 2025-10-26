@@ -13,7 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.core.userdetails.UserDetailsService;
+// import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -32,31 +32,34 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(UserService userService, PasswordEncoder passwordEncoder) {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(passwordEncoder);
-        authProvider.setUserDetailsService(userService);
-        return authProvider;
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(UserService userService, PasswordEncoder passwordEncoder) throws Exception {
+        return authentication -> {
+            DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
+            authenticationProvider.setUserDetailsService(userService);
+            authenticationProvider.setPasswordEncoder(passwordEncoder);
+            return authenticationProvider.authenticate(authentication);
+        };
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthFilter jwtAuthFilter) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/register", "/dashboard", "/user-management", "/api/auth/**", "/css/**").permitAll()
-                .requestMatchers("/api/donations/**").authenticated() // Allow authenticated access to donation endpoints
-                .requestMatchers("/api/events/**").authenticated() // Allow authenticated access to event endpoints
-                .requestMatchers("/api/blood-requests/**").authenticated() // Allow authenticated access to blood request endpoints
-                .requestMatchers("/api/blood-units/**").authenticated() // Allow authenticated access to blood unit endpoints
-                .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers("/", "/login", "/register", "/donor-signup", "/dashboard", "/user-management",
+                "/blood-request-management", "/blood-unit-management", "/event-management",
+                "/donation-management", "/blood-donation-events", "/donations-history",
+                "/event-register-management", "/api/auth/**", "/css/**", "/img/**", "/js/**", "/webjars/**", "/favicon.ico", "/strategy-management")
+                        .permitAll()
+                        .requestMatchers("/api/donations/history").hasRole("DONOR") // Require DONOR role for donation history page
+                        .requestMatchers("/api/strategies/**").hasRole("IT_OFFICER") // New rule for strategy management
+                        .requestMatchers("/api/donations/donor/**").hasRole("DONOR") // Allow donors to view their history
+                        .requestMatchers("/api/donations/**", "/api/blood-requests/**", "/api/blood-units/**",
+                                "/api/events/**", "/api/users/**", "/api/event-registers/**", "/api/donors/**")
+                        .authenticated()
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 }

@@ -4,8 +4,13 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+// import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import java.time.LocalDate;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "event")
@@ -17,6 +22,10 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long eventId;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<EventRegister> eventRegisters;
 
     @Column(name = "event_name", nullable = false)
     private String eventName;
@@ -30,7 +39,10 @@ public class Event {
     @Column(name = "location")
     private String location;
 
-    @ManyToOne
+    @Column(name = "max_donors")
+    private Integer maxDonors;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "organizer_id")
     private EventOrganizer eventOrganizer;
 }

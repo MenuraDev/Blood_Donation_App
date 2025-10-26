@@ -1,38 +1,1270 @@
-
+<!-- donation-management.html -->
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Donation Management</title>
-    <link rel="stylesheet" href="../static/css/style.css">
-</head>
-<body>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+ <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Life Link - Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Koulen&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+  </head>
+  <body>
     <header>
-        <div class="container">
-            <h1>Blood Donation Management</h1>
-            <nav>
-                <ul>
-                    <li><a href="/">Home</a></li>
-                    <li><a href="/login">Login</a></li>
-                    <li><a href="/donor-signup">Sign Up</a></li>
-                    <li><a href="/dashboard">Dashboard</a></li>
-                </ul>
-            </nav>
+      <div class="container">
+        <div class="logo-container"> 
+          <lottie-player class="logo-lottie" th:src="@{/img/heartlogo.json}" src="/img/heartlogo.json" renderer="svg" autoplay loop speed="1" aria-hidden="true"></lottie-player>
+          <h1>Life Link</h1>
         </div>
+        <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+        <label for="nav-toggle" class="nav-toggle-label">
+          <span></span>
+        </label>
+        <nav class="nav">
+          <ul>
+            <li class="home-link">
+              <a href="/">Home</a>
+            </li>
+            <li class="dashboard-link">
+              <a href="/dashboard">Dashboard</a>
+            </li>
+            <li class="become-donor-link">
+              <a href="/donor-signup">Become a Donor</a>
+            </li>
+            <li class="login-link">
+              <a href="/login">Login</a>
+            </li>
+          </ul>
+        </nav>
+      </div>
     </header>
 
-    <main>
-        <div class="container">
-            <h2>Donation Management</h2>
-            <p>This page is under construction.</p>
+    <main class="dashboard-main">
+      <div class="dashboard-container">
+        <!-- Dashboard Header with Stats -->
+        <div class="dashboard-header">
+          <h2 class="dashboard-title">
+            <i class="fas fa-hand-holding-heart"></i>
+            Donation Management
+          </h2>
+          <div class="dashboard-stats">
+                        <div class="stat-card">
+              <div class="stat-icon total">
+                <i class="fas fa-tint"></i>
+              </div>
+              <div class="stat-info">
+                <h4>Total Donations</h4>
+                <p class="stat-value" id="totalDonations">0</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon pending">
+                <i class="fas fa-clock"></i>
+              </div>
+              <div class="stat-info">
+                <h4>Pending</h4>
+                <p class="stat-value" id="pendingDonations">0</p>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon approved">
+                <i class="fas fa-check-circle"></i>
+              </div>
+              <div class="stat-info">
+                <h4>Approved</h4>
+                <p class="stat-value" id="approvedDonations">0</p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        <!-- Action Bar -->
+        <div class="action-bar">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="searchDonations" placeholder="Search donations...">
+          </div>
+          <button id="addDonationBtn" class="btn-primary">
+            <i class="fas fa-plus-circle"></i> Add New Donation
+          </button>
+        </div>
+
+        <!-- Modern Table Container -->
+        <div class="modern-table-container">
+          <div class="table-responsive">
+            <table class="modern-table">
+              <thead>
+                <tr>
+                  <th>
+                    <div class="th-content">
+                      <span>ID</span>
+                      <i class="fas fa-sort"></i>
+                    </div>
+                  </th>
+                  <th>
+                    <div class="th-content">
+                      <span>Donor</span>
+                      <i class="fas fa-sort"></i>
+                    </div>
+                  </th>
+                  <th>
+                    <div class="th-content">
+                      <span>Date</span>
+                      <i class="fas fa-sort"></i>
+                    </div>
+                  </th>
+                  <th>
+                    <div class="th-content">
+                      <span>Quantity (ml)</span>
+                      <i class="fas fa-sort"></i>
+                    </div>
+                  </th>
+                  <th>
+                    <div class="th-content">
+                      <span>Blood Pressure</span>
+                      <i class="fas fa-sort"></i>
+                    </div>
+                  </th>
+                  <th>
+                    <div class="th-content">
+                      <span>Hemoglobin</span>
+                      <i class="fas fa-sort"></i>
+                    </div>
+                  </th>
+                  <th>
+                    <div class="th-content">
+                      <span>Status</span>
+                      <i class="fas fa-sort"></i>
+                    </div>
+                  </th>
+                  <th>
+                    <div class="th-content">
+                      <span>Nurse</span>
+                      <i class="fas fa-sort"></i>
+                    </div>
+                  </th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="donationTableBody">
+                <!-- Donation rows will be loaded here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </main>
 
-    <footer>
-        <div class="container">
-            <p>&copy; 2025 Blood Donation App. All rights reserved.</p>
+    <!-- Donation Form Modal -->
+    <div id="donationModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 id="modalTitle">Add New Donation</h3>
+          <span class="close">&times;</span>
         </div>
-    </footer>
-</body>
+        <div class="modal-body">
+          <form id="donationForm">
+            <input type="hidden" id="donationId" name="id" />
+            <div class="form-group">
+              <label for="donorNameInput">Donor Name</label>
+              <div style="display: flex; gap: 8px; align-items: center;">
+                <input type="text" id="donorNameInput" list="donorSuggestions" required autocomplete="off" style="flex: 1;" placeholder="Type first name to search..." />
+                <button type="button" id="searchDonorBtn" class="btn-secondary" style="padding: 8px 12px; white-space: nowrap;" title="Search for donor by first name">
+                  <i class="fas fa-search"></i>
+                </button>
+              </div>
+              <datalist id="donorSuggestions"></datalist>
+              <input type="hidden" id="donorId" name="donorId" />
+              <small id="selectedDonorName" class="form-text text-muted"></small>
+            </div>
+            <div class="form-group">
+              <label for="eventNameInput">Event Name (Optional)</label>
+              <input type="text" id="eventNameInput" list="eventSuggestions" autocomplete="off" />
+              <datalist id="eventSuggestions"></datalist>
+              <input type="hidden" id="eventId" name="eventId" />
+              <small id="selectedEventName" class="form-text text-muted"></small>
+            </div>
+            <div class="form-group">
+              <label for="bloodType">Blood Type</label>
+              <select id="bloodType" name="bloodType" required>
+                <option value="">Select Blood Type</option>
+                <option value="A_POS">A+</option>
+                <option value="A_NEG">A-</option>
+                <option value="B_POS">B+</option>
+                <option value="B_NEG">B-</option>
+                <option value="AB_POS">AB+</option>
+                <option value="AB_NEG">AB-</option>
+                <option value="O_POS">O+</option>
+                <option value="O_NEG">O-</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="donationDate">Donation Date</label>
+              <input
+                type="date"
+                id="donationDate"
+                name="donationDate"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="quantityMl">Quantity (ml)</label>
+              <input
+                type="number"
+                id="quantityMl"
+                name="quantityMl"
+                required
+                min="1"
+                placeholder="Enter quantity in ml"
+              />
+            </div>
+            <div class="form-group">
+              <label for="bloodPressure">Blood Pressure</label>
+              <input type="text" id="bloodPressure" name="bloodPressure" />
+            </div>
+            <div class="form-group">
+              <label for="hemoglobinLevel">Hemoglobin Level</label>
+              <input
+                type="number"
+                id="hemoglobinLevel"
+                name="hemoglobinLevel"
+                step="0.1"
+              />
+            </div>
+            <input type="hidden" id="nurseId" name="nurseId" />
+            <div class="form-actions">
+              <button type="submit" class="btn-primary" id="submitBtn">
+                <span class="btn-text">Submit Donation</span>
+                <span class="btn-loading" style="display: none;">
+                  <i class="fas fa-spinner fa-spin"></i> Submitting...
+                </span>
+              </button>
+              <button type="button" class="btn-secondary" id="cancelEdit">
+                Cancel
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+      <div class="modal-content success-content">
+        <div class="modal-header">
+          <h3>Success</h3>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="notification success">
+            <i class="fas fa-check-circle"></i>
+            <p id="successMessage">Operation completed successfully!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Error Modal -->
+    <div id="errorModal" class="modal">
+      <div class="modal-content error-content">
+        <div class="modal-header">
+          <h3>Error</h3>
+          <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+          <div class="notification error">
+            <i class="fas fa-exclamation-circle"></i>
+            <p id="errorMessage">An error occurred!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+      const API_BASE_URL = "/api/donations";
+      const API_DONORS_SEARCH_URL = "/api/users/donors/search"; // New API endpoint for donor search
+      const API_EVENTS_SEARCH_URL = "/api/events/search"; // New API endpoint for event search
+      let currentUserRoles = [];
+      let currentUserId = null;
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const jwtToken = localStorage.getItem("jwtToken");
+        if (!jwtToken) {
+          window.location.href = "/login";
+          return;
+        }
+
+        const userRoles = localStorage.getItem("userRoles");
+        if (userRoles) {
+          currentUserRoles = JSON.parse(userRoles);
+        }
+        currentUserId = localStorage.getItem("userId");
+
+        loadDonations();
+        setupRoleBasedVisibility();
+        setupSearchFunctionality();
+        initializeTableSorting();
+
+        // Modal event listeners
+        document
+          .getElementById("addDonationBtn")
+          .addEventListener("click", function () {
+            openModal("donationModal");
+            resetForm();
+          });
+
+        document
+          .getElementById("donationForm")
+          .addEventListener("submit", async function (event) {
+            event.preventDefault();
+            
+            // Validate required fields
+            const requiredFields = ['donorId', 'bloodType', 'donationDate', 'quantityMl'];
+            const missingFields = [];
+            
+            for (const field of requiredFields) {
+              const element = document.getElementById(field);
+              if (!element || !element.value.trim()) {
+                missingFields.push(field);
+              }
+            }
+            
+            if (missingFields.length > 0) {
+              showErrorAlert(`Please fill in all required fields: ${missingFields.join(', ')}`);
+              return;
+            }
+            
+            // Validate donor selection
+            const donorId = document.getElementById("donorId").value;
+            const donorName = document.getElementById("donorNameInput").value;
+            if (!donorId || !donorName.trim()) {
+              showErrorAlert("Please select a valid donor from the suggestions.");
+              return;
+            }
+            
+            // Validate quantity
+            const quantity = parseInt(document.getElementById("quantityMl").value);
+            if (isNaN(quantity) || quantity < 1) {
+              showErrorAlert("Please enter a valid quantity (minimum 1 ml).");
+              return;
+            }
+            
+            // Validate date
+            const donationDate = document.getElementById("donationDate").value;
+            if (!donationDate) {
+              showErrorAlert("Please select a donation date.");
+              return;
+            }
+            
+            const donationId = document.getElementById("donationId").value;
+            const formData = new FormData(this);
+            const donationData = {};
+
+            for (let [key, value] of formData.entries()) {
+              if (key === "hemoglobinLevel" && value) {
+                donationData[key] = parseFloat(value);
+              } else if (
+                ["donorId", "eventId", "nurseId", "quantityMl"].includes(key)
+              ) {
+                donationData[key] = value ? parseInt(value, 10) : null;
+              } else {
+                donationData[key] = value;
+              }
+            }
+
+            if (donationId) {
+              donationData.id = parseInt(donationId, 10);
+            } else {
+              delete donationData.id;
+            }
+
+            if (hasRole("ROLE_NURSE") && currentUserId) {
+              donationData.nurseId = parseInt(currentUserId, 10);
+            }
+
+            if (!donationId) {
+              donationData.status = "PENDING";
+            }
+
+            // Show loading state
+            const submitBtn = document.getElementById('submitBtn');
+            if (submitBtn) {
+              const btnText = submitBtn.querySelector('.btn-text');
+              const btnLoading = submitBtn.querySelector('.btn-loading');
+              
+              submitBtn.disabled = true;
+              if (btnText) btnText.style.display = 'none';
+              if (btnLoading) btnLoading.style.display = 'inline';
+            }
+
+            // Log the data being sent for debugging
+            console.log("Submitting donation data:", donationData);
+
+            try {
+              if (donationId) {
+                await updateDonation(donationId, donationData);
+              } else {
+                await createDonation(donationData);
+              }
+            } finally {
+              // Reset button state
+              const submitBtn = document.getElementById('submitBtn');
+              if (submitBtn) {
+                const btnText = submitBtn.querySelector('.btn-text');
+                const btnLoading = submitBtn.querySelector('.btn-loading');
+                
+                submitBtn.disabled = false;
+                if (btnText) btnText.style.display = 'inline';
+                if (btnLoading) btnLoading.style.display = 'none';
+              }
+            }
+          });
+
+        document
+          .getElementById("cancelEdit")
+          .addEventListener("click", function () {
+            closeModal("donationModal");
+            resetForm();
+          });
+
+        // Close modals when clicking on X
+        document.querySelectorAll(".close").forEach((closeBtn) => {
+          closeBtn.addEventListener("click", function () {
+            const modalId = this.closest(".modal").id;
+            closeModal(modalId);
+          });
+        });
+
+        // Close modals when clicking outside
+        window.addEventListener("click", function (event) {
+          if (event.target.classList.contains("modal")) {
+            closeModal(event.target.id);
+          }
+        });
+
+        // Donor search functionality
+        const donorNameInput = document.getElementById("donorNameInput");
+        const donorSuggestions = document.getElementById("donorSuggestions");
+        const donorIdHidden = document.getElementById("donorId");
+        const selectedDonorNameSpan = document.getElementById("selectedDonorName");
+        const searchDonorBtn = document.getElementById("searchDonorBtn");
+
+        // Manual search button functionality
+        searchDonorBtn.addEventListener("click", async function() {
+          const fullName = donorNameInput.value.trim();
+          if (!fullName) {
+            alert("Please enter a name to search for.");
+            return;
+          }
+          
+          // Extract first name from the full name
+          const firstName = fullName.split(' ')[0];
+          await searchAndDisplayDonor(firstName);
+        });
+
+        let searchDebounceTimer;
+        donorNameInput.addEventListener("input", async function () {
+          const query = this.value.trim();
+          
+          // Clear previous timer
+          clearTimeout(searchDebounceTimer);
+          
+          if (query.length > 0) {
+            // Show searching message
+            selectedDonorNameSpan.textContent = "Searching...";
+            
+            // Extract first name from the full name query
+            const firstName = query.split(' ')[0];
+            
+            // Wait for user to stop typing before searching
+            searchDebounceTimer = setTimeout(async () => {
+              if (firstName.length > 0) {
+                await fetchDonorSuggestions(firstName);
+              }
+            }, 300); // 300ms delay
+          } else {
+            donorSuggestions.innerHTML = "";
+            donorIdHidden.value = "";
+            selectedDonorNameSpan.textContent = "";
+          }
+        });
+
+        donorNameInput.addEventListener("change", function () {
+          const selectedOption = Array.from(donorSuggestions.options).find(
+            (option) => option.value === this.value
+          );
+          if (selectedOption) {
+            const donorId = selectedOption.dataset.id;
+            const firstName = selectedOption.dataset.firstName;
+            const lastName = selectedOption.dataset.lastName;
+            const bloodType = selectedOption.dataset.bloodType;
+            
+            donorIdHidden.value = donorId;
+            selectedDonorNameSpan.textContent = `Selected: ${firstName} ${lastName} (ID: ${donorId}, Blood Type: ${bloodType})`;
+            
+            console.log(`Donor selected: ${firstName} ${lastName} with ID: ${donorId}`);
+            
+            // Auto-fill blood type if available
+            if (bloodType && bloodType !== 'Unknown') {
+              const bloodTypeSelect = document.getElementById('bloodType');
+              if (bloodTypeSelect) {
+                bloodTypeSelect.value = bloodType;
+                console.log(`Auto-filled blood type: ${bloodType}`);
+              }
+            }
+          } else {
+            donorIdHidden.value = "";
+            selectedDonorNameSpan.textContent = "";
+            console.log("No donor selected or invalid selection");
+          }
+        });
+
+        async function fetchDonorSuggestions(query) {
+          try {
+            console.log(`Searching donors with first name: "${query}"`);
+            
+            const response = await fetch(`${API_DONORS_SEARCH_URL}?firstName=${query}`, {
+              method: "GET",
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+              },
+            });
+
+            console.log(`Search response status: ${response.status}`);
+
+            if (response.ok) {
+              const donors = await response.json();
+              console.log(`Found ${donors.length} donors:`, donors);
+              
+              donorSuggestions.innerHTML = ""; // Clear previous suggestions
+              selectedDonorNameSpan.textContent = ""; // Clear the message
+
+              if (donors.length === 0) {
+                console.log("No donors found for the given first name");
+                // Only show "No donors found" if user has stopped typing for a while
+                setTimeout(() => {
+                  if (donorNameInput.value.trim() === query) {
+                    selectedDonorNameSpan.textContent = "No donors found with this name. Please try a different name.";
+                  }
+                }, 1000);
+                return;
+              }
+              
+              donors.forEach((donor) => {
+                const option = document.createElement("option");
+                option.value = `${donor.firstName} ${donor.lastName}`;
+                option.dataset.id = donor.userId; // Store donor ID in a data attribute
+                option.dataset.firstName = donor.firstName;
+                option.dataset.lastName = donor.lastName;
+                option.dataset.bloodType = donor.bloodType || 'Unknown';
+                donorSuggestions.appendChild(option);
+                
+                console.log(`Added donor option: ${donor.firstName} ${donor.lastName} (ID: ${donor.userId})`);
+              });
+            } else {
+              console.error("Failed to fetch donor suggestions:", response.statusText);
+              donorSuggestions.innerHTML = "";
+            }
+          } catch (error) {
+            console.error("Error fetching donor suggestions:", error);
+            donorSuggestions.innerHTML = "";
+          }
+        }
+
+        // Event search functionality
+        const eventNameInput = document.getElementById("eventNameInput");
+        const eventSuggestions = document.getElementById("eventSuggestions");
+        const eventIdHidden = document.getElementById("eventId");
+        const selectedEventNameSpan = document.getElementById("selectedEventName");
+
+        eventNameInput.addEventListener("input", async function () {
+          const query = this.value.trim();
+          if (query.length > 1) {
+            await fetchEventSuggestions(query);
+          } else {
+            eventSuggestions.innerHTML = "";
+            eventIdHidden.value = "";
+            selectedEventNameSpan.textContent = "";
+          }
+        });
+
+        eventNameInput.addEventListener("change", function () {
+          const selectedOption = Array.from(eventSuggestions.options).find(
+            (option) => option.value === this.value
+          );
+          if (selectedOption) {
+            eventIdHidden.value = selectedOption.dataset.id;
+            selectedEventNameSpan.textContent = `Selected Event: ${selectedOption.value}`;
+          } else {
+            eventIdHidden.value = "";
+            selectedEventNameSpan.textContent = "";
+          }
+        });
+
+        async function fetchEventSuggestions(query) {
+          try {
+            const response = await fetch(`${API_EVENTS_SEARCH_URL}?eventName=${query}`, {
+              method: "GET",
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+              },
+            });
+
+            if (response.ok) {
+              const events = await response.json();
+              eventSuggestions.innerHTML = ""; // Clear previous suggestions
+              events.forEach((event) => {
+                const option = document.createElement("option");
+                option.value = event.eventName;
+                option.dataset.id = event.eventId; // Store event ID in a data attribute
+                eventSuggestions.appendChild(option);
+              });
+            } else {
+              console.error("Failed to fetch event suggestions:", response.statusText);
+              eventSuggestions.innerHTML = "";
+            }
+          } catch (error) {
+            console.error("Error fetching event suggestions:", error);
+            eventSuggestions.innerHTML = "";
+          }
+        }
+      });
+
+      function openModal(modalId) {
+        document.getElementById(modalId).style.display = "block";
+        document.body.style.overflow = "hidden";
+      }
+
+      function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+        document.body.style.overflow = "auto";
+      }
+
+      function hasRole(roleName) {
+        return currentUserRoles.some(
+          (role) =>
+            (typeof role === "string" && role === roleName) ||
+            (typeof role === "object" && role.authority === roleName)
+        );
+      }
+
+      function setupRoleBasedVisibility() {
+        const addDonationBtn = document.getElementById("addDonationBtn");
+        if (hasRole("ROLE_NURSE") || hasRole("ROLE_BLOOD_DONATION_MANAGER")) {
+          addDonationBtn.style.display = "inline-flex";
+        } else {
+          addDonationBtn.style.display = "none";
+        }
+      }
+
+      async function loadDonations() {
+        try {
+          const response = await fetch(API_BASE_URL, {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+            },
+          });
+
+          if (response.ok) {
+            const donations = await response.json();
+            
+            // Update dashboard stats
+            updateDashboardStats(donations);
+            
+            const tableBody = document.getElementById("donationTableBody");
+            tableBody.innerHTML = "";
+            donations.forEach((donation) => {
+              const row = tableBody.insertRow();
+              row.innerHTML = `
+                <td>${donation.id}</td>
+                <td>${
+                  donation.donor
+                    ? donation.donor.firstName + " " + donation.donor.lastName
+                    : "N/A"
+                }</td>
+                <td>${formatDate(donation.donationDate)}</td>
+                <td>${donation.quantityMl}</td>
+                <td>${donation.bloodPressure || "N/A"}</td>
+                <td>${donation.hemoglobinLevel || "N/A"}</td>
+                <td>${donation.status}</td>
+                <td>${
+                  donation.nurse
+                    ? donation.nurse.firstName + " " + donation.nurse.lastName
+                    : "N/A"
+                }</td>
+                <td class="actions-column">
+                  ${
+                    hasRole("ROLE_NURSE") ||
+                    hasRole("ROLE_BLOOD_DONATION_MANAGER")
+                      ? `
+                      <button class="btn-info edit-btn" data-id="${donation.id}" 
+                          data-donation='${JSON.stringify(donation)}'
+                          style="padding: 8px 16px; border-radius: 999px; border: none; background-color: #17a2b8; color: white; cursor: pointer; margin: 0 4px; display: inline-flex; align-items: center; gap: 8px;">
+                          <i class="fas fa-edit"></i> Edit
+                        </button>
+                      <button class="btn-danger delete-btn" data-id="${donation.id}"
+                          style="padding: 8px 16px; border-radius: 999px; border: none; background-color: #dc3545; color: white; cursor: pointer; margin: 0 4px; display: inline-flex; align-items: center; gap: 8px;">
+                          <i class="fas fa-trash-alt"></i> Delete
+                      </button>
+                      ${
+                        donation.status === "PENDING"
+                          ? `
+                      <button class="btn-success approve-btn" data-id="${donation.id}">
+                        <i class="fas fa-check-circle"></i> Approve
+                      </button>
+                      <button class="btn-warning disapprove-btn" data-id="${donation.id}">
+                        <i class="fas fa-times-circle"></i> Disapprove
+                      </button>
+                      `
+                          : ""
+                      }
+                  `
+                      : ""
+                  }
+                </td>
+              `;
+            });
+            attachEventListeners();
+          } else {
+            const errorData = await response.json();
+            showErrorAlert(
+              "Failed to load donations: " +
+                (errorData.message || response.statusText)
+            );
+          }
+        } catch (error) {
+          showErrorAlert(
+            "An unexpected error occurred while loading donations."
+          );
+          console.error("Error loading donations:", error);
+        }
+      }
+
+      async function createDonation(donationData) {
+        try {
+          console.log("Creating donation with data:", donationData);
+          
+          const token = localStorage.getItem("jwtToken");
+          if (!token) {
+            showErrorAlert("You are not logged in. Please log in again.");
+            window.location.href = "/login";
+            return;
+          }
+          
+          const response = await fetch(API_BASE_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+            body: JSON.stringify(donationData),
+          });
+
+          console.log("Response status:", response.status);
+          console.log("Response headers:", response.headers);
+
+          if (response.ok) {
+            closeModal("donationModal");
+            showSuccessAlert("Donation added successfully!");
+            resetForm();
+            loadDonations();
+          } else {
+            let errorMessage = "Failed to add donation";
+            try {
+              const errorData = await response.json();
+              console.error("Error response:", errorData);
+              errorMessage = errorData.message || errorData.error || errorMessage;
+            } catch (parseError) {
+              console.error("Error parsing response:", parseError);
+              errorMessage = `Server error: ${response.status} ${response.statusText}`;
+            }
+            showErrorAlert(errorMessage);
+          }
+        } catch (error) {
+          console.error("Network or JavaScript error:", error);
+          showErrorAlert("Network error: Unable to connect to server. Please check your connection and try again.");
+        }
+      }
+
+      async function updateDonation(id, donationData) {
+        try {
+          console.log("Updating donation with ID:", id, "Data:", donationData);
+          
+          const token = localStorage.getItem("jwtToken");
+          if (!token) {
+            showErrorAlert("You are not logged in. Please log in again.");
+            window.location.href = "/login";
+            return;
+          }
+
+          const response = await fetch(`${API_BASE_URL}/${id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Bearer " + token,
+            },
+            body: JSON.stringify(donationData),
+          });
+
+          console.log("Update response status:", response.status);
+          console.log("Update response headers:", response.headers);
+
+          if (response.ok) {
+            closeModal("donationModal");
+            showSuccessAlert("Donation updated successfully!");
+            resetForm();
+            loadDonations();
+          } else {
+            let errorMessage = "Failed to update donation";
+            try {
+              const errorData = await response.json();
+              console.error("Update error response:", errorData);
+              errorMessage = errorData.message || errorData.error || errorMessage;
+            } catch (parseError) {
+              console.error("Error parsing update response:", parseError);
+              errorMessage = `Server error: ${response.status} ${response.statusText}`;
+            }
+            showErrorAlert(errorMessage);
+          }
+        } catch (error) {
+          console.error("Network or JavaScript error during update:", error);
+          showErrorAlert(
+            "Network error: Unable to connect to server or unexpected client-side error during update. Please check your connection and try again."
+          );
+        }
+      }
+
+      async function deleteDonation(id) {
+        if (confirm("Are you sure you want to delete this donation?")) {
+          try {
+            const response = await fetch(`${API_BASE_URL}/${id}`, {
+              method: "DELETE",
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+              },
+            });
+
+            if (response.ok) {
+              showSuccessAlert("Donation deleted successfully!");
+              loadDonations();
+            } else {
+              const errorData = await response.json();
+              showErrorAlert(
+                "Failed to delete donation: " +
+                  (errorData.message || response.statusText)
+              );
+            }
+          } catch (error) {
+            showErrorAlert(
+              "An unexpected error occurred while deleting donation."
+            );
+            console.error("Error deleting donation:", error);
+          }
+        }
+      }
+
+      async function approveDonation(id) {
+        if (
+          confirm(
+            "Are you sure you want to approve this donation? This will create a blood unit."
+          )
+        ) {
+          try {
+            const response = await fetch(`${API_BASE_URL}/${id}/approve`, {
+              method: "PUT",
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+              },
+            });
+
+            if (response.ok) {
+              showSuccessAlert(
+                "Donation approved successfully! A blood unit has been created."
+              );
+              loadDonations();
+            } else {
+              const errorData = await response.json();
+              showErrorAlert(
+                "Failed to approve donation: " +
+                  (errorData.message || response.statusText)
+              );
+            }
+          } catch (error) {
+            showErrorAlert(
+              "An unexpected error occurred while approving donation."
+            );
+            console.error("Error approving donation:", error);
+          }
+        }
+      }
+
+      async function disapproveDonation(id) {
+        if (confirm("Are you sure you want to disapprove this donation?")) {
+          try {
+            const response = await fetch(`${API_BASE_URL}/${id}/disapprove`, {
+              method: "PUT",
+              headers: {
+                Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+              },
+            });
+
+            if (response.ok) {
+              showSuccessAlert("Donation disapproved successfully!");
+              loadDonations();
+            } else {
+              const errorData = await response.json();
+              showErrorAlert(
+                "Failed to disapprove donation: " +
+                  (errorData.message || response.statusText)
+              );
+            }
+          } catch (error) {
+            showErrorAlert(
+              "An unexpected error occurred while disapproving donation."
+            );
+            console.error("Error disapproving donation:", error);
+          }
+        }
+      }
+
+      function attachEventListeners() {
+        document.querySelectorAll(".edit-btn").forEach((button) => {
+          button.removeEventListener("click", handleEditClick);
+          button.addEventListener("click", handleEditClick);
+        });
+
+        document.querySelectorAll(".delete-btn").forEach((button) => {
+          button.removeEventListener("click", handleDeleteClick);
+          button.addEventListener("click", handleDeleteClick);
+        });
+
+        document.querySelectorAll(".approve-btn").forEach((button) => {
+          button.removeEventListener("click", handleApproveClick);
+          button.addEventListener("click", handleApproveClick);
+        });
+
+        document.querySelectorAll(".disapprove-btn").forEach((button) => {
+          button.removeEventListener("click", handleDisapproveClick);
+          button.addEventListener("click", handleDisapproveClick);
+        });
+      }
+
+      function handleEditClick(event) {
+        const donationData = JSON.parse(
+          event.target.closest(".edit-btn").dataset.donation
+        );
+        document.getElementById("donationId").value = donationData.id;
+        
+        // Populate new donor fields
+        const donorNameInput = document.getElementById("donorNameInput");
+        const donorIdHidden = document.getElementById("donorId");
+        const selectedDonorNameSpan = document.getElementById("selectedDonorName");
+
+        if (donationData.donor) {
+          donorNameInput.value = `${donationData.donor.firstName} ${donationData.donor.lastName}`;
+          donorIdHidden.value = donationData.donor.userId;
+          selectedDonorNameSpan.textContent = `Selected Donor: ${donorNameInput.value}`;
+        } else {
+          donorNameInput.value = "";
+          donorIdHidden.value = "";
+          selectedDonorNameSpan.textContent = "";
+        }
+
+        // Populate new event fields
+        const eventNameInput = document.getElementById("eventNameInput");
+        const eventIdHidden = document.getElementById("eventId");
+        const selectedEventNameSpan = document.getElementById("selectedEventName");
+
+        if (donationData.event) {
+          eventNameInput.value = donationData.event.eventName;
+          eventIdHidden.value = donationData.event.eventId;
+          selectedEventNameSpan.textContent = `Selected Event: ${donationData.event.eventName}`;
+        } else {
+          eventNameInput.value = "";
+          eventIdHidden.value = "";
+          selectedEventNameSpan.textContent = "";
+        }
+
+        document.getElementById("bloodType").value = donationData.bloodType;
+        document.getElementById("donationDate").value =
+          donationData.donationDate;
+        document.getElementById("quantityMl").value = donationData.quantityMl;
+        document.getElementById("bloodPressure").value =
+          donationData.bloodPressure;
+        document.getElementById("hemoglobinLevel").value =
+          donationData.hemoglobinLevel;
+
+        // Ensure nurseId is set for edits if the current user is a nurse
+        if (hasRole("ROLE_NURSE") && currentUserId) {
+          document.getElementById("nurseId").value = currentUserId;
+        }
+
+        document.getElementById("modalTitle").textContent = "Edit Donation";
+        document.querySelector(
+          '#donationForm button[type="submit"]'
+        ).textContent = "Update Donation";
+        openModal("donationModal");
+      }
+
+      function handleDeleteClick(event) {
+        const id = event.target.closest(".delete-btn").dataset.id;
+        deleteDonation(id);
+      }
+
+      function handleApproveClick(event) {
+        const id = event.target.closest(".approve-btn").dataset.id;
+        approveDonation(id);
+      }
+
+      function handleDisapproveClick(event) {
+        const id = event.target.closest(".disapprove-btn").dataset.id;
+        disapproveDonation(id);
+      }
+
+      function resetForm() {
+        document.getElementById("donationForm").reset();
+        document.getElementById("donationId").value = "";
+        document.getElementById("modalTitle").textContent = "Add New Donation";
+        
+        // Reset button state
+        const submitBtn = document.getElementById('submitBtn');
+        if (submitBtn) {
+          const btnText = submitBtn.querySelector('.btn-text');
+          const btnLoading = submitBtn.querySelector('.btn-loading');
+          
+          submitBtn.disabled = false;
+          if (btnText) btnText.style.display = 'inline';
+          if (btnLoading) btnLoading.style.display = 'none';
+          if (btnText) btnText.textContent = "Submit Donation";
+        }
+
+        // Clear new donor fields
+        document.getElementById("donorNameInput").value = "";
+        document.getElementById("donorId").value = "";
+        document.getElementById("selectedDonorName").textContent = "";
+        document.getElementById("donorSuggestions").innerHTML = "";
+
+        // Clear new event fields
+        document.getElementById("eventNameInput").value = "";
+        document.getElementById("eventId").value = "";
+        document.getElementById("selectedEventName").textContent = "";
+        document.getElementById("eventSuggestions").innerHTML = "";
+
+        if (hasRole("ROLE_NURSE") && currentUserId) {
+          document.getElementById("nurseId").value = currentUserId;
+        }
+      }
+
+      function showSuccessAlert(message) {
+        document.getElementById("successMessage").textContent = message;
+        openModal("successModal");
+        setTimeout(() => {
+          closeModal("successModal");
+        }, 3000);
+      }
+
+      // Utility function to find donor ID by first name
+      async function findDonorIdByFirstName(firstName) {
+        try {
+          console.log(`Looking up donor ID for first name: "${firstName}"`);
+          
+          const response = await fetch(`${API_DONORS_SEARCH_URL}?firstName=${firstName}`, {
+            method: "GET",
+            headers: {
+              Authorization: "Bearer " + localStorage.getItem("jwtToken"),
+            },
+          });
+
+          if (response.ok) {
+            const donors = await response.json();
+            console.log(`Found ${donors.length} donors with first name "${firstName}":`, donors);
+            
+            if (donors.length === 0) {
+              console.log(`No donors found with first name: ${firstName}`);
+              return null;
+            }
+            
+            // Return the first match or all matches
+            if (donors.length === 1) {
+              const donor = donors[0];
+              console.log(`Found donor: ${donor.firstName} ${donor.lastName} (ID: ${donor.userId})`);
+              return {
+                userId: donor.userId,
+                firstName: donor.firstName,
+                lastName: donor.lastName,
+                bloodType: donor.bloodType,
+                email: donor.email,
+                phone: donor.phone
+              };
+            } else {
+              console.log(`Multiple donors found with first name "${firstName}":`);
+              donors.forEach(donor => {
+                console.log(`- ${donor.firstName} ${donor.lastName} (ID: ${donor.userId})`);
+              });
+              return donors; // Return all matches
+            }
+          } else {
+            console.error(`Failed to search donors: ${response.status} ${response.statusText}`);
+            return null;
+          }
+        } catch (error) {
+          console.error("Error searching for donor:", error);
+          return null;
+        }
+      }
+
+      // Function to manually search and display donor information
+      async function searchAndDisplayDonor(firstName) {
+        const result = await findDonorIdByFirstName(firstName);
+        
+        if (result === null) {
+          alert(`No donors found with first name: ${firstName}`);
+          return;
+        }
+        
+        if (Array.isArray(result)) {
+          // Multiple donors found
+          let message = `Multiple donors found with first name "${firstName}":\n\n`;
+          result.forEach(donor => {
+            message += `• ${donor.firstName} ${donor.lastName}\n`;
+            message += `  ID: ${donor.userId}\n`;
+            message += `  Blood Type: ${donor.bloodType || 'Unknown'}\n`;
+            message += `  Email: ${donor.email}\n`;
+            message += `  Phone: ${donor.phone}\n\n`;
+          });
+          alert(message);
+        } else {
+          // Single donor found
+          const donor = result;
+          const message = `Donor Found:\n\n` +
+            `Name: ${donor.firstName} ${donor.lastName}\n` +
+            `ID: ${donor.userId}\n` +
+            `Blood Type: ${donor.bloodType || 'Unknown'}\n` +
+            `Email: ${donor.email}\n` +
+            `Phone: ${donor.phone}`;
+          alert(message);
+        }
+      }
+
+      function showErrorAlert(message) {
+        document.getElementById("errorMessage").textContent = message;
+        openModal("errorModal");
+        setTimeout(() => {
+          closeModal("errorModal");
+        }, 5000);
+      }
+
+      function formatDate(dateString) {
+        if (!dateString) return "N/A";
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        return new Date(dateString).toLocaleDateString(undefined, options);
+      }
+
+      // Make functions globally available for debugging and external use
+      window.findDonorIdByFirstName = findDonorIdByFirstName;
+      window.searchAndDisplayDonor = searchAndDisplayDonor;
+      
+      // Global utility function for quick donor ID lookup
+      window.getDonorId = async function(firstName) {
+        const result = await findDonorIdByFirstName(firstName);
+        if (result && !Array.isArray(result)) {
+          console.log(`Donor ID for "${firstName}": ${result.userId}`);
+          return result.userId;
+        } else if (Array.isArray(result)) {
+          console.log(`Multiple donors found for "${firstName}":`);
+          result.forEach(donor => console.log(`- ${donor.firstName} ${donor.lastName}: ${donor.userId}`));
+          return result.map(donor => donor.userId);
+        } else {
+          console.log(`No donor found with first name: ${firstName}`);
+          return null;
+        }
+      };
+
+      function getStatusIcon(status) {
+        switch(status.toUpperCase()) {
+          case 'PENDING':
+            return 'fa-clock';
+          case 'APPROVED':
+            return 'fa-check-circle';
+          case 'REJECTED':
+            return 'fa-times-circle';
+          default:
+            return 'fa-question-circle';
+        }
+      }
+
+      function updateDashboardStats(donations) {
+        const totalDonations = donations.length;
+        const pendingDonations = donations.filter(d => d.status === 'PENDING').length;
+        const approvedDonations = donations.filter(d => d.status === 'Approved').length;
+
+        document.getElementById('totalDonations').textContent = totalDonations;
+        document.getElementById('pendingDonations').textContent = pendingDonations;
+        document.getElementById('approvedDonations').textContent = approvedDonations;
+      }
+
+      function setupSearchFunctionality() {
+        const searchInput = document.getElementById('searchDonations');
+        let debounceTimer;
+
+        searchInput.addEventListener('input', function() {
+          clearTimeout(debounceTimer);
+          debounceTimer = setTimeout(() => {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('#donationTableBody tr');
+
+            rows.forEach(row => {
+              const text = row.textContent.toLowerCase();
+              row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+          }, 300);
+        });
+      }
+
+      function initializeTableSorting() {
+        const table = document.querySelector('.modern-table');
+        const headers = table.querySelectorAll('th');
+        const tableBody = table.querySelector('tbody');
+
+        headers.forEach((header, index) => {
+          if (header.textContent !== 'Actions') {
+            header.addEventListener('click', () => {
+              const direction = header.classList.contains('asc') ? -1 : 1;
+              const rows = Array.from(tableBody.querySelectorAll('tr'));
+              
+              // Reset other headers
+              headers.forEach(h => h.classList.remove('asc', 'desc'));
+              
+              // Sort rows
+              const sortedRows = rows.sort((a, b) => {
+                const aCol = a.children[index].textContent.trim();
+                const bCol = b.children[index].textContent.trim();
+                
+                if (!isNaN(aCol) && !isNaN(bCol)) {
+                  return direction * (Number(aCol) - Number(bCol));
+                }
+                return direction * aCol.localeCompare(bCol);
+              });
+
+              // Update header class
+              header.classList.toggle('asc', direction === 1);
+              header.classList.toggle('desc', direction === -1);
+
+              // Update table
+              tableBody.append(...sortedRows);
+            });
+          }
+        });
+      }
+    </script>
+  </body>
 </html>

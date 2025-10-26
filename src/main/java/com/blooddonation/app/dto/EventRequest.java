@@ -11,4 +11,5 @@ public class EventRequest {
     private String location;
     private String description;
     private Long eventOrganizerId;
+    private Integer maxDonors;
 }
