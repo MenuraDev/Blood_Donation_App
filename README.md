@@ -1,4 +1,4 @@
-# Blood Donation App 🩸
+# Life Link - Blood Donation Management System 🩸
 
 A simple yet powerful application to manage blood donations. This application helps in connecting blood donors with those in need.
 
